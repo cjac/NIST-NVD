@@ -3,7 +3,7 @@ use strict;
 use Data::Dumper;
 use XML::XPath;
 use XML::XPath::XMLParser;
-use Storable qw(freeze thaw);
+use Storable qw(nfreeze thaw);
 use IO::Compress::Bzip2 qw(bzip2 $Bzip2Error);
 use DB_File;
 
@@ -21,7 +21,7 @@ my %idx_cpe;
 my %vuln_software;
 my $idx_cpe = tie %idx_cpe, 'DB_File', $idx_cpe_file, O_CREAT|O_RDWR, 0666;
 
-print( "processing file: $filename\n" );
+print( "processing file: $filename..." );
 
 open( my $nvdcve_fd, q{<}, $filename ) or die
   qq{couldn't open "$filename": $!};
@@ -57,12 +57,12 @@ while( my $line = <$nvdcve_fd> ){
   }
 }
 
-print "processed $iter entries\n";
+print " $iter entries\n";
 
 undef $db;
 untie %entry;
 
-print "Writing CPE index to disk";
+print "Writing CPE index to disk...";
 
 foreach my $cpe ( keys %vuln_software ){
   my $frozen;
@@ -77,13 +77,15 @@ foreach my $cpe ( keys %vuln_software ){
       [ @{ $vuln_software{$cpe} }, @{ $thawed } ]
   }
 
-  $frozen = freeze($vuln_software{$cpe});
+  $frozen = nfreeze($vuln_software{$cpe});
 
   $idx_cpe->put( $cpe, $frozen );
 }
 
 undef $idx_cpe;
 untie %idx_cpe;
+
+print " Done.\n";
 
 
 sub process_nvd {
@@ -109,7 +111,7 @@ sub process_nvd {
 	push( @{ $vuln_software{$product} }, $cve_id );
       }
 
-      my $frozen = freeze($entry);
+      my $frozen = nfreeze($entry);
 
       my $compressed;
 
