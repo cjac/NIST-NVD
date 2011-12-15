@@ -35,21 +35,19 @@ is( ref $entry, 'HASH', 'CVE entry is a HASH ref' );
 
 my $cvss = $entry->{'vuln:cvss'};
 
-is_deeply( $cvss, [
-		   {
-		    'cvss:base_metrics' => {
-					    'cvss:confidentiality-impact' => 'PARTIAL',
-					    'cvss:score' => '4.3',
-					    'cvss:authentication' => 'NONE',
-					    'cvss:access-vector' => 'NETWORK',
-					    'cvss:source' => 'http://nvd.nist.gov',
-					    'cvss:generated-on-datetime' => '2011-12-08T06:47:00.000-05:00',
-					    'cvss:availability-impact' => 'NONE',
-					    'cvss:integrity-impact' => 'NONE',
-					    'cvss:access-complexity' => 'MEDIUM'
-					   }
-		   }
-		  ], 'extracting cvss worked' );
+is_deeply( $cvss, {
+		   'cvss:base_metrics' => {
+					   'cvss:confidentiality-impact' => 'PARTIAL',
+					   'cvss:score' => '4.3',
+					   'cvss:authentication' => 'NONE',
+					   'cvss:access-vector' => 'NETWORK',
+					   'cvss:source' => 'http://nvd.nist.gov',
+					   'cvss:generated-on-datetime' => '2011-12-08T06:47:00.000-05:00',
+					   'cvss:availability-impact' => 'NONE',
+					   'cvss:integrity-impact' => 'NONE',
+					   'cvss:access-complexity' => 'MEDIUM'
+					  }
+		  }, 'extracting cvss worked' );
 
 done_testing();
 
