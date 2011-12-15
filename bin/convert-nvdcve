@@ -5,9 +5,8 @@ use XML::XPath;
 use XML::XPath::XMLParser;
 use Storable qw(nfreeze thaw);
 use IO::Compress::Bzip2 qw(bzip2 $Bzip2Error);
+use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error);
 use DB_File;
-
-use Data::Dumper;
 
 my $filename = $ARGV[0] || 'nvdcve-2.0-recent.xml';
 
@@ -23,8 +22,15 @@ my $idx_cpe = tie %idx_cpe, 'DB_File', $idx_cpe_file, O_CREAT|O_RDWR, 0666;
 
 print( "processing file: $filename..." );
 
-open( my $nvdcve_fd, q{<}, $filename ) or die
-  qq{couldn't open "$filename": $!};
+my $nvdcve_fd;
+
+if( $filename =~ /\.bz2$/ ){
+  $nvdcve_fd = new IO::Uncompress::Bunzip2 $filename
+    or die "IO::Uncompress::Bunzip2 failed: $Bunzip2Error\n";
+}else{
+  open( $nvdcve_fd, q{<}, $filename ) or die
+    qq{couldn't open "$filename": $!};
+}
 
 my $header;
 my $entry_body;
