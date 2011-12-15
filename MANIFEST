@@ -4,6 +4,7 @@ Makefile.PL
 README
 lib/NIST/NVD.pm
 lib/NIST/NVD/Query.pm
+bin/convert-nvdcve
 t/00-load.t
 t/manifest.t
 t/pod-coverage.t
