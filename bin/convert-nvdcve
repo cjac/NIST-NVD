@@ -152,15 +152,13 @@ sub process_entry {
     }elsif( $nodeName eq 'vuln:cve-id' ){
       $results->{$nodeName} = $vuln->string_value();
     }elsif( $nodeName eq 'vuln:discovered-datetime' ){
-      push( @{$results->{$nodeName}}, $vuln->string_value() );
+      $results->{$nodeName} = $vuln->string_value();
     }elsif( $nodeName eq 'vuln:published-datetime' ){
-      push( @{$results->{$nodeName}}, $vuln->string_value() );
+      $results->{$nodeName} = $vuln->string_value();
     }elsif( $nodeName eq 'vuln:last-modified-datetime' ){
-      push( @{$results->{$nodeName}}, $vuln->string_value() );
+      $results->{$nodeName} = $vuln->string_value();
     }elsif( $nodeName eq 'vuln:cvss' ){
-      push( @{$results->{$nodeName}},
-      	    process_vuln_cvss( $vuln )
-      	  );
+      $results->{$nodeName} = process_vuln_cvss( $vuln );
     }elsif( $nodeName eq 'vuln:cwe' ){
       push( @{$results->{$nodeName}}, $vuln->getAttribute('id') );
     }elsif( $nodeName eq 'vuln:references' ){
@@ -168,9 +166,9 @@ sub process_entry {
       	    process_vuln_references( $vuln )
       	  );
     }elsif( $nodeName eq 'vuln:summary' ){
-      push( @{$results->{$nodeName}}, $vuln->string_value() );
+      $results->{$nodeName} = $vuln->string_value();
     }elsif( $nodeName eq 'vuln:security-protection' ){
-      push( @{$results->{$nodeName}}, $vuln->string_value() );
+      $results->{$nodeName} = $vuln->string_value();
     }elsif( $nodeName eq 'vuln:assessment_check' ){
       push( @{$results->{$nodeName}}, { map {
 	$_->getName() => $_->getNodeValue()
