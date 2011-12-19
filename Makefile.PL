@@ -9,9 +9,7 @@ WriteMakefile
    VERSION_FROM        => 'lib/NIST/NVD.pm',
    EXE_FILES           => [ 'bin/convert-nvdcve' ],
    ABSTRACT_FROM       => 'lib/NIST/NVD.pm',
-   ($ExtUtils::MakeMaker::VERSION >= 6.3002
-    ? ('LICENSE'=> 'perl')
-	       : ()),
+   LICENSE             => 'perl',
    PL_FILES            => {},
    PREREQ_PM => {
 		 'Test::More'            => 0,
@@ -21,6 +19,7 @@ WriteMakefile
 		 'Storable'              => 0,
 		 'IO::Compress::Bzip2'   => 0,
 		 'DB_File'               => 0,
+		 'Carp'                  => 0,
 		},
    dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
    clean               => { FILES => 'NIST-NVD-* t/data/*.db' },
