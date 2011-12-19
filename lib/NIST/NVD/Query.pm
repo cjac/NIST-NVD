@@ -96,19 +96,19 @@ sub new {
 
   my $self = {};
   foreach my $arg ( keys %args ){
-    if( grep { $_ eq $arg } keys %{ $args->{filename} } ){
+    if( grep { $_ eq $arg } @{ $args->{filename} } ){
       unless( -f $args{$arg} ){
 	carp "$arg file '$args{$arg}' does not exist\n";
 	$fail++;
       }
     }
-    if( grep { $_ eq $arg } keys %{ $args->{database} } ){
+    if( grep { $_ eq $arg } @{ $args->{database} } ){
       my %tied_hash;
-      $self->{$db_arg} = \%tied_hash;
-      $self->{"$db_arg.db"} = tie %tied_hash, 'DB_File', $args{$db_arg}, O_RDONLY;
+      $self->{$arg} = \%tied_hash;
+      $self->{"$arg.db"} = tie %tied_hash, 'DB_File', $args{$arg}, O_RDONLY;
 
-      unless( $self->{"$db_arg.db"} ){
-	carp "failed to open database '$args{$db_arg}': $!";
+      unless( $self->{"$arg.db"} ){
+	carp "failed to open database '$args{$arg}': $!";
 	$fail++;
       }
     }

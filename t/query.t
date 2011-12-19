@@ -23,11 +23,20 @@ my $q = NIST::NVD::Query->new( database => $db_file,
 
 is( ref $q, 'NIST::NVD::Query', 'constructor returned an object of correct class' );
 
-my $cve_id_list = $q->cve_for_cpe( cpe => 'cpe:/a:microsoft:ie:7.0.5730.11' );
+my $cve_id_list;
+
+$cve_id_list = $q->cve_for_cpe( cpe => 'cpe:/a:microsoft:ie:7.0.5730.11' );
 
 is( ref $cve_id_list, 'ARRAY', 'cve_for_cpe returned ARRAY ref' );
 
-is_deeply( $cve_id_list, ['CVE-2002-2435','CVE-2010-5071'], 'Correct list of CVE IDs' );
+is( int( @$cve_id_list ), 2, 'correct number of CVEs returned for this CPE' );
+
+foreach my $cve_entry ( @$cve_id_list ){
+  like( $cve_entry, qr{^CVE-\d{4,}-\d{4}$}, 'format of CVE ID is correct' );
+}
+
+is_deeply( $cve_id_list, ['CVE-2002-2435','CVE-2010-5071'],
+	   'Correct list of CVE IDs' );
 
 my $entry = $q->cve( cve_id => $cve_id_list->[0] );
 

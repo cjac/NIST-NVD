@@ -6,6 +6,11 @@ lib/NIST/NVD.pm
 lib/NIST/NVD/Query.pm
 bin/convert-nvdcve
 t/00-load.t
+t/01-convert-nvdcve.t
+t/boilerplate.t
+t/query.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
+t/data/nvdcve-2.0-test.xml
+ignore.txt
