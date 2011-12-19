@@ -95,7 +95,7 @@ print " Done.\n";
 
 
 sub process_nvd {
-  my $xml = shift;
+  my ( $xml ) = @_;
 
   my $xp = XML::XPath->new(xml => $xml);
 
@@ -134,8 +134,7 @@ sub process_nvd {
 }
 
 sub process_entry {
-  my $entry = shift;
-  my $nvd = shift;
+  my ( $entry, $nvd ) = @_;
 
   my $results = {};
 
@@ -187,7 +186,7 @@ sub process_entry {
 }
 
 sub process_vuln_config {
-  my $vuln = shift;
+  my ( $vuln ) = @_;
 
   my $results = {};
 
@@ -204,7 +203,7 @@ sub process_vuln_config {
 }
 
 sub process_cpe_logical_test {
-  my( $logical_test ) = shift;
+  my ( $logical_test ) = @_;
   my $logTestName = $logical_test->getName();
 
   my $results = {};
@@ -230,7 +229,7 @@ sub process_cpe_logical_test {
 }
 
 sub process_vuln_software_list {
-  my( $vuln ) = @_;
+  my ( $vuln ) = @_;
   my $vulnName = $vuln->getName();
 
   my $results = [];

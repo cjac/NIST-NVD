@@ -75,10 +75,8 @@ database
 =cut
 
 sub new {
-  my $class = shift();
+  my( $class, %args ) = @_;
   $class = ref $class || $class;
-
-  my %args = @_;
 
   my $args = { filename => [ qw{ database idx_cpe } ],
 	       database => [ qw{ database idx_cpe } ],
@@ -144,8 +142,7 @@ Returns a reference to an array of CVE IDs.  Example:
 =cut
 
 sub cve_for_cpe {
-  my $self = shift;
-  my %args = @_;
+  my( $self, %args ) = @_;
 
   my $frozen;
 
@@ -205,8 +202,7 @@ Returns a reference to a hash representing a CVE entry:
 
 
 sub cve {
-  my $self = shift;
-  my %args = @_;
+  my( $self, %args ) =  @_;
 
   my $compressed;
 
