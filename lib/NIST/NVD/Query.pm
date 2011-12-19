@@ -80,8 +80,13 @@ sub new {
 
   my %args = @_;
 
+  my $args = { filename => [ qw{ database idx_cpe } ],
+	       database => [ qw{ database idx_cpe } ],
+	       required => [ qw{ database idx_cpe } ],
+	     };
+
   my $fail = 0;
-  foreach my $req_arg ( qw{ database idx_cpe } ){
+  foreach my $req_arg ( @{$args->{required}} ){
     unless( $args{$req_arg} ){
       carp "'$req_arg' is a required argument to __PACKAGE__::new\n";
       $fail++;
@@ -89,24 +94,23 @@ sub new {
   }
   return undef if $fail;
 
-  foreach my $filename_arg ( qw{ database idx_cpe } ){
-    unless( -f $args{$filename_arg} ){
-      carp "$filename_arg file '$args{$filename_arg}' does not exist\n";
-      $fail++;
-    }
-  }
-  return undef if $fail;
-
   my $self = {};
+  foreach my $arg ( keys %args ){
+    if( grep { $_ eq $arg } keys %{ $args->{filename} } ){
+      unless( -f $args{$arg} ){
+	carp "$arg file '$args{$arg}' does not exist\n";
+	$fail++;
+      }
+    }
+    if( grep { $_ eq $arg } keys %{ $args->{database} } ){
+      my %tied_hash;
+      $self->{$db_arg} = \%tied_hash;
+      $self->{"$db_arg.db"} = tie %tied_hash, 'DB_File', $args{$db_arg}, O_RDONLY;
 
-  foreach my $db_arg ( qw{ database idx_cpe } ){
-    my %tied_hash;
-    $self->{$db_arg} = \%tied_hash;
-    $self->{"$db_arg.db"} = tie %tied_hash, 'DB_File', $args{$db_arg}, O_RDONLY;
-
-    unless( $self->{"$db_arg.db"} ){
-      carp "failed to open database '$args{$db_arg}': $!";
-      $fail++;
+      unless( $self->{"$db_arg.db"} ){
+	carp "failed to open database '$args{$db_arg}': $!";
+	$fail++;
+      }
     }
   }
   return undef if $fail;
