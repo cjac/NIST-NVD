@@ -13,12 +13,12 @@ my $filename = $ARGV[0] || 'nvdcve-2.0-recent.xml';
 my $db_file = 'nvdcve-2.0.db';
 
 my %entry;
-my $db = tie %entry, 'DB_File', $db_file, O_CREAT|O_RDWR, 0666;
+my $db = tie %entry, 'DB_File', $db_file, O_CREAT|O_RDWR, oct(666);
 
 my $idx_cpe_file = 'nvdcve-2.0.idx_cpe.db';
 my %idx_cpe;
 my %vuln_software;
-my $idx_cpe = tie %idx_cpe, 'DB_File', $idx_cpe_file, O_CREAT|O_RDWR, 0666;
+my $idx_cpe = tie %idx_cpe, 'DB_File', $idx_cpe_file, O_CREAT|O_RDWR, oct(666);
 
 print( "processing file: $filename..." );
 

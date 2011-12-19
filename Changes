@@ -10,6 +10,5 @@ Revision history for NIST-NVD
 	Added some PODs
 	got rid of some unnecessary complexity in cve hash ref
 
-0.01    Date/time
-        First version, released on an unsuspecting world.
-
+0.01    2011/12/13
+        Initial work completed

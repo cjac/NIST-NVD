@@ -90,7 +90,7 @@ sub new {
       $fail++;
     }
   }
-  return undef if $fail;
+  return if $fail;
 
   my $self = {};
   foreach my $arg ( keys %args ){
@@ -111,7 +111,7 @@ sub new {
       }
     }
   }
-  return undef if $fail;
+  return if $fail;
 
   bless $self, $class;
 }
@@ -150,13 +150,13 @@ sub cve_for_cpe {
 
   unless( $result == 0 ){
     carp "failed to retrieve CVEs for CPE '$args{cpe}': $!\n";
-    return undef;
+    return;
   }
 
   my $cve_ids = eval { thaw $frozen };
   if( @$ ){
     carp "Storable::thaw had a major malfunction.";
-    return undef;
+    return;
   }
 
   return $cve_ids;
@@ -210,7 +210,7 @@ sub cve {
 
   unless( $result == 0 ){
     carp "failed to retrieve CVE '$args{cve_id}': $!\n";
-    return undef;
+    return;
   }
 
   my $frozen;
@@ -218,13 +218,13 @@ sub cve {
   my $status = bunzip2( \$compressed, \$frozen );
   unless( $status ){
     carp "bunzip2 failed: $Bunzip2Error\n";
-    return undef;
+    return;
   }
 
   my $entry = eval { thaw $frozen };
   if( @$ ){
     carp "Storable::thaw had a major malfunction.";
-    return undef;
+    return;
   }
 
   return $entry;

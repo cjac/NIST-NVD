@@ -13,4 +13,6 @@ t/manifest.t
 t/pod-coverage.t
 t/pod.t
 t/data/nvdcve-2.0-test.xml
+t/critic.t
+t/perlcriticrc
 ignore.txt

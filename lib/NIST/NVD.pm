@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-NIST::NVD - The great new NIST::NVD!
+NIST::NVD - Placeholder for general NIST::NVD utilities
 
 =head1 VERSION
 
@@ -18,35 +18,7 @@ our $VERSION = '0.03';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
-    use NIST::NVD;
-
-    my $foo = NIST::NVD->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
-
-=head1 SUBROUTINES/METHODS
-
-=head2 function1
-
-=cut
-
-sub function1 {
-}
-
-=head2 function2
-
-=cut
-
-sub function2 {
-}
+Nothing to see here yet
 
 =head1 AUTHOR
 
@@ -96,7 +68,7 @@ L<http://search.cpan.org/dist/NIST-NVD/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 C.J. Adams-Collier.
+Copyright 2011 F5 Networks, Inc.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
