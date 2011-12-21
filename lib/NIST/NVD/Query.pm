@@ -144,6 +144,10 @@ Returns a reference to an array of CVE IDs.  Example:
 sub cve_for_cpe {
   my( $self, %args ) = @_;
 
+  unless( exists $args{cpe} ){
+    carp qq{"cpe" is a required argument to __PACKAGE__::cve_for_cpe\n};
+  }
+
   my $frozen;
 
   my $result = $self->{'idx_cpe.db'}->get($args{cpe}, $frozen);
