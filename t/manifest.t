@@ -12,8 +12,9 @@ use Cwd;
 (my $test_dir)       = $Bin;
 (my $dist_dir)       = Cwd::realpath( File::Spec->catfile($Bin, '..') );
 
-unless ( $ENV{RELEASE_TESTING} ) {
-    plan( skip_all => "Author tests not required for installation" );
+if ( not $ENV{RELEASE_TESTING} ) {
+    my $msg = 'Author test.  Set $ENV{RELEASE_TESTING} to a true value to run.';
+    plan( skip_all => $msg );
 }
 
 eval "use Test::CheckManifest 0.9";
