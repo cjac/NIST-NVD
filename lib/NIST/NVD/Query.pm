@@ -2,11 +2,6 @@ package NIST::NVD::Query;
 
 use warnings;
 use strict;
-
-use Storable qw(thaw);
-use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error);
-use DB_File;
-
 use Carp;
 
 =head1 NAME
@@ -15,11 +10,11 @@ NIST::NVD::Query - Query the NVD database
 
 =head1 VERSION
 
-Version 0.03
+Version 0.05
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.05';
 
 
 =head1 SYNOPSIS
@@ -34,8 +29,8 @@ database
 
     my( $path_to_db, $path_to_idx_cpe ) = @ARGV;
 
-    my $q = NIST::NVD::Query->new( database => $path_to_db,
-                                   idx_cpe  => $path_to_idx_cpe,
+    my $q = NIST::NVD::Query->new( store => $some_store,
+                                   %args
                                   );
 
     # Given a Common Platform Enumeration urn, returns a list of known
@@ -78,42 +73,15 @@ sub new {
   my( $class, %args ) = @_;
   $class = ref $class || $class;
 
-  my $args = { filename => [ qw{ database idx_cpe } ],
-	       database => [ qw{ database idx_cpe } ],
-	       required => [ qw{ database idx_cpe } ],
-	     };
+	my $store = $args{store} //= "DB_File";
 
-  my $fail = 0;
-  foreach my $req_arg ( @{$args->{required}} ){
-    unless( $args{$req_arg} ){
-      carp "'$req_arg' is a required argument to __PACKAGE__::new\n";
-      $fail++;
-    }
-  }
-  return if $fail;
+	my $db_class = "NIST::NVD::Store::$store";
 
-  my $self = {};
-  foreach my $arg ( keys %args ){
-    if( grep { $_ eq $arg } @{ $args->{filename} } ){
-      unless( -f $args{$arg} ){
-	carp "$arg file '$args{$arg}' does not exist\n";
-	$fail++;
-      }
-    }
-    if( grep { $_ eq $arg } @{ $args->{database} } ){
-      my %tied_hash;
-      $self->{$arg} = \%tied_hash;
-      $self->{"$arg.db"} = tie %tied_hash, 'DB_File', $args{$arg}, O_RDONLY;
+	my $db = $db_class->new( \%args );
 
-      unless( $self->{"$arg.db"} ){
-	carp "failed to open database '$args{$arg}': $!";
-	$fail++;
-      }
-    }
-  }
-  return if $fail;
+	return unless $db;
 
-  bless $self, $class;
+  bless { store => $db }, $class;
 }
 
 =head2 cve_for_cpe
@@ -148,22 +116,7 @@ sub cve_for_cpe {
     carp qq{"cpe" is a required argument to __PACKAGE__::cve_for_cpe\n};
   }
 
-  my $frozen;
-
-  my $result = $self->{'idx_cpe.db'}->get($args{cpe}, $frozen);
-
-  unless( $result == 0 ){
-    carp "failed to retrieve CVEs for CPE '$args{cpe}': $!\n";
-    return;
-  }
-
-  my $cve_ids = eval { thaw $frozen };
-  if( @$ ){
-    carp "Storable::thaw had a major malfunction.";
-    return;
-  }
-
-  return $cve_ids;
+  return $self->{store}->get_cve_for_cpe(%args);
 }
 
 =head2 cve
@@ -208,30 +161,7 @@ Returns a reference to a hash representing a CVE entry:
 sub cve {
   my( $self, %args ) =  @_;
 
-  my $compressed;
-
-  my $result = $self->{'database.db'}->get($args{cve_id}, $compressed);
-
-  unless( $result == 0 ){
-    carp "failed to retrieve CVE '$args{cve_id}': $!\n";
-    return;
-  }
-
-  my $frozen;
-
-  my $status = bunzip2( \$compressed, \$frozen );
-  unless( $status ){
-    carp "bunzip2 failed: $Bunzip2Error\n";
-    return;
-  }
-
-  my $entry = eval { thaw $frozen };
-  if( @$ ){
-    carp "Storable::thaw had a major malfunction.";
-    return;
-  }
-
-  return $entry;
+	return $self->{store}->get_cve();
 }
 
 =head1 AUTHOR
