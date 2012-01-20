@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use ExtUtils::MakeMaker;
+use F5::MakeMaker;
 
 WriteMakefile
   (

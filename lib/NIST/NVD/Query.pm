@@ -73,14 +73,12 @@ sub new {
   my( $class, %args ) = @_;
   $class = ref $class || $class;
 
-	my $store = $args{store} //= "DB_File";
+	my $store = $args{store} || "DB_File";
 
 	my $db_class = "NIST::NVD::Store::$store";
+	eval "use $db_class";
 
-	require "$db_class";
-
-	my $db = $db_class->new( \%args );
-
+	my $db = $db_class->new( %args );
 	return unless $db;
 
   bless { store => $db }, $class;
@@ -163,7 +161,7 @@ Returns a reference to a hash representing a CVE entry:
 sub cve {
   my( $self, %args ) =  @_;
 
-	return $self->{store}->get_cve();
+	return $self->{store}->get_cve((%args));
 }
 
 =head1 AUTHOR

@@ -17,6 +17,7 @@ use FindBin qw($Bin);
 
 undef $ENV{PATH};
 undef $ENV{ENV};
+undef $ENV{CDPATH};
 
 unlink( $db_file ) if -f $db_file;
 unlink( $cpe_idx_file ) if -f $cpe_idx_file;

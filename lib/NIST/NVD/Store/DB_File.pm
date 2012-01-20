@@ -1,14 +1,23 @@
 package NIST::NVD::Store::DB_File;
 
+use NIST::NVD::Store::Base;
 use base qw{NIST::NVD::Store::Base};
 
 use warnings;
 use strict;
 
+our $VERSION = '0.05';
+
+use Carp;
+
 use Storable qw(thaw);
 use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error);
 use DB_File;
 
+=head2 new
+
+
+=cut
 
 sub new {
   my( $class, %args ) = @_;
@@ -53,6 +62,9 @@ sub new {
 
 }
 
+=head2 get_cve_for_cpe
+
+=cut
 
 sub get_cve_for_cpe {
   my( $self, %args ) = @_;
@@ -74,6 +86,11 @@ sub get_cve_for_cpe {
 
 	return $cve_ids
 }
+
+=head2 get_cve
+
+
+=cut
 
 sub get_cve {
   my( $self, %args ) =  @_;
@@ -103,3 +120,5 @@ sub get_cve {
 
   return $entry;
 }
+
+1;
