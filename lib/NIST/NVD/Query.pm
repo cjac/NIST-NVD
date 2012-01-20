@@ -77,6 +77,8 @@ sub new {
 
 	my $db_class = "NIST::NVD::Store::$store";
 
+	require "$db_class";
+
 	my $db = $db_class->new( \%args );
 
 	return unless $db;
