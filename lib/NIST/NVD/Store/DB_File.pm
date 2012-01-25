@@ -142,8 +142,9 @@ sub get_cve {
 =cut
 
 sub put_idx_cpe {
-    my ( $self, $cpe_urn, $value ) = @_;
+    my ( $self, $vuln_software ) = @_;
 
+		foreach my $cpe_urn ( keys %$vuln_software ){
     my $frozen;
 
     $self->{'idx_cpe.db'}->get( $cpe_urn, $frozen );
@@ -158,12 +159,13 @@ sub put_idx_cpe {
           if ref $self->{vuln_software}->{$cpe_urn} eq 'ARRAY';
 
         # Combine previous results with these results
-        $self->{vuln_software}->{$cpe_urn} = [ @vuln_list, @{$thawed} ];
+        $vuln_software->{$cpe_urn} = [ @vuln_list, @{$thawed} ];
     }
 
-    $frozen = nfreeze( $self->{vuln_software}->{$cpe_urn} );
+    $frozen = nfreeze( $vuln_software->{$cpe_urn} );
 
     $self->{'idx_cpe.db'}->put( $cpe_urn, $frozen );
+	}
 }
 
 =head2 put_nvd_entries
