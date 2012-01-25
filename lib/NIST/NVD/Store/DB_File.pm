@@ -170,42 +170,24 @@ sub put_idx_cpe {
 
 =head2 put_nvd_entries
 
-  $NVD_Storage_ORACLE->put_nvd_entries( $entries, $vuln_software )
+  $NVD_Storage_ORACLE->put_nvd_entries( $entries )
 
 =cut
 
 sub put_nvd_entries {
-    my ( $self, $entries, $vuln_software ) = @_;
+    my ( $self, $entries ) = @_;
 
-    foreach my $nvd ( keys $entries ) {
-        next unless $nvd->getName eq 'nvd';
-        foreach my $entry_node ( $nvd->getChildNodes() ) {
-            next
-              unless $entry_node->getName
-                  && $entry_node->getName eq 'entry';
+    while ( my ( $cve_id, $entry ) = ( each %$entries ) ) {
 
-            my $entry = process_entry( $entry_node, $nvd );
+        my $frozen = nfreeze($entry);
 
-            #      die( Data::Dumper::Dumper $entry );
+        my $compressed;
 
-            my $cve_id = $entry->{'vuln:cve-id'};
+        bzip2 \$frozen => \$compressed
+          or die "bzip2 failed: $Bzip2Error\n";
 
-            foreach
-              my $product ( @{ $entry->{'vuln:vulnerable-software-list'} } )
-            {
-                push( @{ $vuln_software->{$product} }, $cve_id );
-            }
-
-            my $frozen = nfreeze($entry);
-
-            my $compressed;
-
-            bzip2 \$frozen => \$compressed
-              or die "bzip2 failed: $Bzip2Error\n";
-
-            #      $entry{$cve_id} = $frozen;
-            $self->{'database.db'}->put( $cve_id, $compressed );
-        }
+        #      $entry{$cve_id} = $frozen;
+        $self->{'database.db'}->put( $cve_id, $compressed );
     }
 }
 
