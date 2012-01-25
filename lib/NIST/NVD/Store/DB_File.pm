@@ -186,7 +186,6 @@ sub put_nvd_entries {
         bzip2 \$frozen => \$compressed
           or die "bzip2 failed: $Bzip2Error\n";
 
-        #      $entry{$cve_id} = $frozen;
         $self->{'database.db'}->put( $cve_id, $compressed );
     }
 }

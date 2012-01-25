@@ -22,13 +22,7 @@ my $NVD_Updater = NIST::NVD::Update->new(
     mode     => O_CREAT | O_RDWR,
 );
 
-my %entry;
-my $db = tie %entry, 'DB_File', $db_file, O_CREAT | O_RDWR, oct(666);
-
-my %idx_cpe;
 my %vuln_software;
-my $idx_cpe = tie %idx_cpe, 'DB_File', $idx_cpe_file, O_CREAT | O_RDWR,
-  oct(666);
 
 print("processing file: $filename...");
 
@@ -72,15 +66,9 @@ while ( my $line = <$nvdcve_fd> ) {
 
 print " $iter entries\n";
 
-undef $db;
-untie %entry;
-
 print "Writing CPE index to disk...";
 
 $NVD_Updater->put_idx_cpe( \%vuln_software );
-
-undef $idx_cpe;
-untie %idx_cpe;
 
 print " Done.\n";
 
@@ -91,38 +79,31 @@ sub process_nvd {
 
     my $nodeset = $xp->find('/nvd');
 
-    my @nodelist = grep { $_->getName eq 'nvd' } $nodeset->get_nodelist;
+    my @nvd_nodelist =
+      grep { $_->getName && $_->getName eq 'nvd' } $nodeset->get_nodelist;
 
-    foreach my $nvd ( @nodelist ) {
-        next unless $nvd->getName eq 'nvd';
-        foreach my $entry_node ( $nvd->getChildNodes() ) {
-            next
-              unless $entry_node->getName
-                  && $entry_node->getName eq 'entry';
+    my $NVD_Entry_HASH = {};
 
+    foreach my $nvd (@nvd_nodelist) {
+        my @entry_nodelist =
+          grep { $_->getName && $_->getName eq 'entry' } $nvd->getChildNodes();
+
+        foreach my $entry_node (@entry_nodelist) {
             my $entry = process_entry( $entry_node, $nvd );
-
-            #      die( Data::Dumper::Dumper $entry );
 
             my $cve_id = $entry->{'vuln:cve-id'};
 
             foreach
-              my $product ( @{ $entry->{'vuln:vulnerable-software-list'} } )
+              my $cpe_urn ( @{ $entry->{'vuln:vulnerable-software-list'} } )
             {
-                push( @{ $vuln_software{$product} }, $cve_id );
+                push( @{ $vuln_software{$cpe_urn} }, $cve_id );
             }
 
-            my $frozen = nfreeze($entry);
-
-            my $compressed;
-
-            bzip2 \$frozen => \$compressed
-              or die "bzip2 failed: $Bzip2Error\n";
-
-            #      $entry{$cve_id} = $frozen;
-            $db->put( $cve_id, $compressed );
+						$NVD_Entry_HASH->{$cve_id} = $entry
         }
     }
+
+    $NVD_Updater->put_nvd_entries( $NVD_Entry_HASH );
 
     #  $xp->dispose();
 }
