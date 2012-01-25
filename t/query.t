@@ -17,9 +17,13 @@ BEGIN {
 
 # Verify that each function returns expected result
 
-my $q = NIST::NVD::Query->new( database => $db_file,
+my $q;
+
+$q = eval{ NIST::NVD::Query->new( database => $db_file,
                                idx_cpe  => $cpe_idx_file,
-                              );
+                              ) };
+
+ok( !$@, "no error" ) or diag $@;
 
 is( ref $q, 'NIST::NVD::Query', 'constructor returned an object of correct class' );
 

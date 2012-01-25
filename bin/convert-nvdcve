@@ -8,14 +8,24 @@ use IO::Compress::Bzip2 qw(bzip2 $Bzip2Error);
 use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error);
 use DB_File;
 
+use NIST::NVD::Update;
+
 my $filename = $ARGV[0] || 'nvdcve-2.0-recent.xml';
 
-my $db_file = 'nvdcve-2.0.db';
+my $db_file      = 'nvdcve-2.0.db';
+my $idx_cpe_file = 'nvdcve-2.0.idx_cpe.db';
+
+my $NVD_Updater = NIST::NVD::Update->new(
+    store    => 'DB_File',
+    database => $db_file,
+    idx_cpe  => $idx_cpe_file,
+    mode     => O_CREAT | O_RDWR,
+);
+
 
 my %entry;
 my $db = tie %entry, 'DB_File', $db_file, O_CREAT|O_RDWR, oct(666);
 
-my $idx_cpe_file = 'nvdcve-2.0.idx_cpe.db';
 my %idx_cpe;
 my %vuln_software;
 my $idx_cpe =
