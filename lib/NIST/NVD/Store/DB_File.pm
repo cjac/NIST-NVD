@@ -10,55 +10,68 @@ our $VERSION = '0.05';
 
 use Carp;
 
-use Storable qw(thaw);
+use Storable qw(nfreeze thaw);
 use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error);
+use IO::Compress::Bzip2 qw(bzip2 $Bzip2Error);
+
 use DB_File;
 
 =head2 new
 
+    my $NVD_Storage_ORACLE = NIST::NVD::Store::DB_File->new(
+        store     => 'DB_File',
+        database  => '/path/to/database.db',
+        'idx_cpe' => '/path/to/idx_cpe.db'
+        mode      => $mode, # perldoc DB_File
+    );
 
 =cut
 
 sub new {
-  my( $class, %args ) = @_;
-  $class = ref $class || $class;
+    my ( $class, %args ) = @_;
+    $class = ref $class || $class;
 
-  my $args = { filename => [ qw{ database idx_cpe } ],
-	       database => [ qw{ database idx_cpe } ],
-	       required => [ qw{ database idx_cpe } ],
-	     };
+    my $args = {
+        filename => [qw{ database idx_cpe }],
+        database => [qw{ database idx_cpe }],
+        required => [qw{ database idx_cpe }],
+    };
 
-  my $fail = 0;
-  foreach my $req_arg ( @{$args->{required}} ){
-    unless( $args{$req_arg} ){
-      carp "'$req_arg' is a required argument to __PACKAGE__::new\n";
-      $fail++;
+		$args{mode} //= O_RDONLY;
+
+    my $fail = 0;
+    foreach my $req_arg ( @{ $args->{required} } ) {
+        unless ( $args{$req_arg} ) {
+            carp "'$req_arg' is a required argument to __PACKAGE__::new\n";
+            $fail++;
+        }
     }
-  }
-  return if $fail;
+    return if $fail;
 
-  my $self = {};
-  foreach my $arg ( keys %args ){
-    if( grep { $_ eq $arg } @{ $args->{filename} } ){
-      unless( -f $args{$arg} ){
-	carp "$arg file '$args{$arg}' does not exist\n";
-	$fail++;
-      }
+    my $self = { vuln_software => {} };
+    foreach my $arg ( keys %args ) {
+        if ( grep { $_ eq $arg } @{ $args->{filename} } ) {
+
+            unless ( ( $args{mode} & O_CREAT ) == O_CREAT || -f $args{$arg} ) {
+                carp "$arg file '$args{$arg}' does not exist\n";
+                $fail++;
+            }
+        }
+        if ( grep { $_ eq $arg } @{ $args->{database} } ) {
+            my %tied_hash;
+            $self->{$arg} = \%tied_hash;
+            $self->{"$arg.db"} = tie %tied_hash, 'DB_File', $args{$arg},
+              $args{mode};
+
+            unless ( $self->{"$arg.db"} ) {
+                carp "failed to open database '$args{$arg}': $!";
+                $fail++;
+            }
+        }
     }
-    if( grep { $_ eq $arg } @{ $args->{database} } ){
-      my %tied_hash;
-      $self->{$arg} = \%tied_hash;
-      $self->{"$arg.db"} = tie %tied_hash, 'DB_File', $args{$arg}, O_RDONLY;
+    return if $fail;
 
-      unless( $self->{"$arg.db"} ){
-	carp "failed to open database '$args{$arg}': $!";
-	$fail++;
-      }
-    }
-  }
-  return if $fail;
-
-	bless $self, $class;
+    bless $self, $class;
 
 }
 
@@ -67,24 +80,25 @@ sub new {
 =cut
 
 sub get_cve_for_cpe {
-  my( $self, %args ) = @_;
+    my ( $self, %args ) = @_;
 
-  my $frozen;
+    my $frozen;
 
-  my $result = $self->{'idx_cpe.db'}->get($args{cpe}, $frozen);
+    my $result = $self->{'idx_cpe.db'}->get( $args{cpe}, $frozen );
 
-  unless( $result == 0 ){
-    carp "failed to retrieve CVEs for CPE '$args{cpe}': $!\n";
-    return;
-  }
+    my $cve_ids = [];
 
-  my $cve_ids = eval { thaw $frozen };
-  if( @$ ){
-    carp "Storable::thaw had a major malfunction: $@";
-    return;
-  }
+    unless ( $result == 0 ) {
+        return $cve_ids;
+    }
 
-	return $cve_ids
+    $cve_ids = eval { thaw $frozen };
+    if (@$) {
+        carp "Storable::thaw had a major malfunction: $@";
+        return;
+    }
+
+    return $cve_ids;
 }
 
 =head2 get_cve
@@ -93,32 +107,104 @@ sub get_cve_for_cpe {
 =cut
 
 sub get_cve {
-  my( $self, %args ) =  @_;
+    my ( $self, %args ) = @_;
 
-  my $compressed;
+    my $compressed;
 
-  my $result = $self->{'database.db'}->get($args{cve_id}, $compressed);
+    my $result = $self->{'database.db'}->get( $args{cve_id}, $compressed );
 
-  unless( $result == 0 ){
-    carp "failed to retrieve CVE '$args{cve_id}': $!\n";
-    return;
-  }
+    unless ( $result == 0 ) {
+        carp "failed to retrieve CVE '$args{cve_id}': $!\n";
+        return;
+    }
 
-  my $frozen;
+    my $frozen;
 
-  my $status = bunzip2( \$compressed, \$frozen );
-  unless( $status ){
-    carp "bunzip2 failed: $Bunzip2Error\n";
-    return;
-  }
+    my $status = bunzip2( \$compressed, \$frozen );
+    unless ($status) {
+        carp "bunzip2 failed: $Bunzip2Error\n";
+        return;
+    }
 
-  my $entry = eval { thaw $frozen };
-  if( @$ ){
-    carp "Storable::thaw had a major malfunction.";
-    return;
-  }
+    my $entry = eval { thaw $frozen };
+    if (@$) {
+        carp "Storable::thaw had a major malfunction.";
+        return;
+    }
 
-  return $entry;
+    return $entry;
+}
+
+=head2 put_idx_cpe
+
+  $NVD_Storage_ORACLE->put_idx_cpe( $cpe_urn, $value )
+
+=cut
+
+sub put_idx_cpe {
+    my ( $self, $cpe_urn, $value ) = @_;
+
+    my $frozen;
+
+    $self->{'idx_cpe.db'}->get( $cpe_urn, $frozen );
+
+    if ($frozen) {
+        my $thawed = thaw($frozen);
+        next unless ref $thawed eq 'ARRAY';
+
+        my @vuln_list = ();
+
+        @vuln_list = @{ $self->{vuln_software}->{$cpe_urn} }
+          if ref $self->{vuln_software}->{$cpe_urn} eq 'ARRAY';
+
+        # Combine previous results with these results
+        $self->{vuln_software}->{$cpe_urn} = [ @vuln_list, @{$thawed} ];
+    }
+
+    $frozen = nfreeze( $self->{vuln_software}->{$cpe_urn} );
+
+    $self->{'idx_cpe.db'}->put( $cpe_urn, $frozen );
+}
+
+=head2 put_nvd_entries
+
+  $NVD_Storage_ORACLE->put_nvd_entries( $entries, $vuln_software )
+
+=cut
+
+sub put_nvd_entries {
+    my ( $self, $entries, $vuln_software ) = @_;
+
+    foreach my $nvd ( keys $entries ) {
+        next unless $nvd->getName eq 'nvd';
+        foreach my $entry_node ( $nvd->getChildNodes() ) {
+            next
+              unless $entry_node->getName
+                  && $entry_node->getName eq 'entry';
+
+            my $entry = process_entry( $entry_node, $nvd );
+
+            #      die( Data::Dumper::Dumper $entry );
+
+            my $cve_id = $entry->{'vuln:cve-id'};
+
+            foreach
+              my $product ( @{ $entry->{'vuln:vulnerable-software-list'} } )
+            {
+                push( @{ $vuln_software->{$product} }, $cve_id );
+            }
+
+            my $frozen = nfreeze($entry);
+
+            my $compressed;
+
+            bzip2 \$frozen => \$compressed
+              or die "bzip2 failed: $Bzip2Error\n";
+
+            #      $entry{$cve_id} = $frozen;
+            $self->{'database.db'}->put( $cve_id, $compressed );
+        }
+    }
 }
 
 1;

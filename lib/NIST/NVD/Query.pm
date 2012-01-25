@@ -1,4 +1,5 @@
 package NIST::NVD::Query;
+use NIST::NVD::Store::DB_File;
 
 use warnings;
 use strict;
@@ -116,7 +117,9 @@ sub cve_for_cpe {
     carp qq{"cpe" is a required argument to __PACKAGE__::cve_for_cpe\n};
   }
 
-  return $self->{store}->get_cve_for_cpe(%args);
+	my $return = $self->{store}->get_cve_for_cpe(%args);
+
+  return $return;
 }
 
 =head2 cve
