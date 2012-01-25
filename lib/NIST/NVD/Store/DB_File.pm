@@ -37,7 +37,7 @@ sub new {
         required => [qw{ database idx_cpe }],
     };
 
-		$args{mode} //= O_RDONLY;
+    $args{mode} //= O_RDONLY;
 
     my $fail = 0;
     foreach my $req_arg ( @{ $args->{required} } ) {
@@ -144,28 +144,28 @@ sub get_cve {
 sub put_idx_cpe {
     my ( $self, $vuln_software ) = @_;
 
-		foreach my $cpe_urn ( keys %$vuln_software ){
-    my $frozen;
+    foreach my $cpe_urn ( keys %$vuln_software ) {
+        my $frozen;
 
-    $self->{'idx_cpe.db'}->get( $cpe_urn, $frozen );
+        $self->{'idx_cpe.db'}->get( $cpe_urn, $frozen );
 
-    if ($frozen) {
-        my $thawed = thaw($frozen);
-        next unless ref $thawed eq 'ARRAY';
+        if ($frozen) {
+            my $thawed = thaw($frozen);
+            next unless ref $thawed eq 'ARRAY';
 
-        my @vuln_list = ();
+            my @vuln_list = ();
 
-        @vuln_list = @{ $self->{vuln_software}->{$cpe_urn} }
-          if ref $self->{vuln_software}->{$cpe_urn} eq 'ARRAY';
+            @vuln_list = @{ $self->{vuln_software}->{$cpe_urn} }
+              if ref $self->{vuln_software}->{$cpe_urn} eq 'ARRAY';
 
-        # Combine previous results with these results
-        $vuln_software->{$cpe_urn} = [ @vuln_list, @{$thawed} ];
+            # Combine previous results with these results
+            $vuln_software->{$cpe_urn} = [ @vuln_list, @{$thawed} ];
+        }
+
+        $frozen = nfreeze( $vuln_software->{$cpe_urn} );
+
+        $self->{'idx_cpe.db'}->put( $cpe_urn, $frozen );
     }
-
-    $frozen = nfreeze( $vuln_software->{$cpe_urn} );
-
-    $self->{'idx_cpe.db'}->put( $cpe_urn, $frozen );
-	}
 }
 
 =head2 put_nvd_entries
