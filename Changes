@@ -1,5 +1,9 @@
 Revision history for NIST-NVD
 
+0.05    2012-01-25 @ 15:47:32
+  separated convert-nvd and Query from the concrete storage class so
+  that it can be over-ridden
+
 0.03    2011/12/19 @ 06:59:30
 	Applying recommendations from Hafey
 	Added some more PODs
