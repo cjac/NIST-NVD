@@ -35,7 +35,7 @@ print("processing file: $filename...");
 my $nvdcve_fd;
 
 open( $nvdcve_fd, q{<}, $filename )
-	or die qq{couldn't open "$filename": $!};
+  or die qq{couldn't open "$filename": $!};
 
 my $header;
 my $entry_body;
@@ -91,7 +91,9 @@ sub process_nvd {
 
     my $nodeset = $xp->find('/nvd');
 
-    foreach my $nvd ( $nodeset->get_nodelist ) {
+    my @nodelist = grep { $_->getName eq 'nvd' } $nodeset->get_nodelist;
+
+    foreach my $nvd ( @nodelist ) {
         next unless $nvd->getName eq 'nvd';
         foreach my $entry_node ( $nvd->getChildNodes() ) {
             next
