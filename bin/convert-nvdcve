@@ -77,22 +77,7 @@ untie %entry;
 
 print "Writing CPE index to disk...";
 
-foreach my $cpe ( keys %vuln_software ) {
-    my $frozen;
-    $idx_cpe->get( $cpe, $frozen );
-
-    if ($frozen) {
-        my $thawed = thaw($frozen);
-        next unless ref $thawed eq 'ARRAY';
-
-        # Combine previous results with these results
-        $vuln_software{$cpe} = [ @{ $vuln_software{$cpe} }, @{$thawed} ];
-    }
-
-    $frozen = nfreeze( $vuln_software{$cpe} );
-
-    $idx_cpe->put( $cpe, $frozen );
-}
+$NVD_Updater->put_idx_cpe( \%vuln_software );
 
 undef $idx_cpe;
 untie %idx_cpe;
