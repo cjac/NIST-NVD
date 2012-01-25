@@ -19,7 +19,6 @@ my $NVD_Updater = NIST::NVD::Update->new(
     store    => 'DB_File',
     database => $db_file,
     idx_cpe  => $idx_cpe_file,
-    mode     => O_CREAT | O_RDWR,
 );
 
 my %vuln_software;

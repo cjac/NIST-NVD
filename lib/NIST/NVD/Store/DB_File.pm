@@ -190,4 +190,9 @@ sub put_nvd_entries {
     }
 }
 
+sub _get_default_args {
+    return ( mode => O_CREAT | O_RDWR );
+
+}
+
 1;
