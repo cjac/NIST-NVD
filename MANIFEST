@@ -4,6 +4,7 @@ Makefile.PL
 README
 lib/NIST/NVD.pm
 lib/NIST/NVD/Query.pm
+lib/NIST/NVD/Update.pm
 lib/NIST/NVD/Store/Base.pm
 lib/NIST/NVD/Store/DB_File.pm
 bin/convert-nvdcve
