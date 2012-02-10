@@ -34,8 +34,12 @@ sub new {
     my $args = {
         filename => [qw{ database idx_cpe }],
         database => [qw{ database idx_cpe }],
-        required => [qw{ database idx_cpe }],
+        required => [qw{ database }],
     };
+
+		unless( exists $args{idx_cpe} ){
+			($args{idx_cpe} = $args{database}) =~ s/(\.db)$/.idx_cpe$1/;
+		}
 
     $args{mode} //= O_RDONLY;
 
