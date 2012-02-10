@@ -3,10 +3,7 @@ package NIST::NVD::Store::Base;
 use warnings;
 use strict;
 
-our $VERSION = '0.051';
-
-
-
+our $VERSION = '0.06';
 
 =head2 get_cve_for_cpe
 
@@ -24,5 +21,19 @@ sub get_cve_for_cpe {
 sub get_cve {
 
 }
+
+=head2 put_cpe
+
+
+=cut
+
+sub put_cpe {
+
+}
+
+sub _get_default_args {
+
+}
+
 
 1;

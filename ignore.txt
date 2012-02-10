@@ -12,3 +12,5 @@ cover_db
 pod2htm*.tmp
 NIST-NVD-*
 t/data/*.db
+#*#
+

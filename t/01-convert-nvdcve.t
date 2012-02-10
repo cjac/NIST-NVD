@@ -2,34 +2,63 @@
 
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 10;
+use Test::File;
+
+use File::Spec;
+use Cwd;
+
+use lib 'blib/lib';
+
 use FindBin qw($Bin);
 
-(my $test_dir)       = $Bin =~ m:^(.*?/t)$:;
+( my $dist_dir ) =
+  ( Cwd::realpath( File::Spec->catfile( $Bin, '..' ) ) =~ m:^(.*NIST-NVD)$: );
 
-(my $data_dir)       = "$test_dir/data" =~ m:^(.*/data)$:;
-(my $convert_script) =
-  "$test_dir/../blib/script/convert-nvdcve" =~ m:^(.*?/convert-nvdcve$):;
-(my $source_file)    =
-  "$data_dir/nvdcve-2.0-test.xml" =~ /^(.*nvdcve-2.0-test.xml)$/;
-(my $db_file)        = "$data_dir/nvdcve-2.0.db" =~ /^(.*db)$/;
-(my $cpe_idx_file)   = "$data_dir/nvdcve-2.0.idx_cpe.db" =~ /^(.*db)$/;
+ok( -d $dist_dir, '$dist_dir is a directory' );
+
+my $test_dir = File::Spec->catfile( $dist_dir, 't' );
+
+ok( -d $test_dir, '$test_dir is a directory' );
+
+my $data_dir = File::Spec->catfile( $test_dir, 'data' );
+
+ok( -d $data_dir, '$data_dir is a directory' );
+
+my $convert_script =
+  File::Spec->catfile( $dist_dir, 'blib', 'script', 'convert-nvdcve' );
+
+ok( -f $convert_script, '$convert_script is a file' );
+
+my $source_file = File::Spec->catfile( $data_dir, 'nvdcve-2.0-test.xml' );
+
+ok( -f $source_file, '$source_file is a file' );
+
+my $db_file = File::Spec->catfile( $data_dir, 'nvdcve-2.0.db' );
+
+unlink($db_file) if -f $db_file;
+
+ok( !-e $db_file, '$db_file does not yet exist' );
+
+my $cpe_idx_file = File::Spec->catfile( $data_dir, 'nvdcve-2.0.idx_cpe.db' );
+
+unlink($cpe_idx_file) if -f $cpe_idx_file;
+
+ok( !-e $cpe_idx_file, '$cpe_idx_file does not yet exist' );
 
 undef $ENV{PATH};
 undef $ENV{ENV};
 undef $ENV{CDPATH};
 
-unlink( $db_file ) if -f $db_file;
-unlink( $cpe_idx_file ) if -f $cpe_idx_file;
+$ENV{PERL5LIB} = File::Spec->catfile( $dist_dir, 'blib', 'lib' );
 
-chdir( $data_dir );
+chdir($data_dir);
 
-system( "$convert_script $source_file" );
+my $output = `$convert_script $source_file 2>&1`;
 
-is( $?, 0, 'conversion script returned cleanly' );
-ok( -f $db_file, 'database file exists' );
-ok( -f $cpe_idx_file, 'CPE index database file exists' );
+is( $?, 0, 'conversion script returned cleanly' ) or diag $output;
+file_exists_ok( $db_file,      'database file exists' );
+file_exists_ok( $cpe_idx_file, 'CPE index database file exists' );
 
-chdir( $test_dir );
+chdir($test_dir);
 
-done_testing();

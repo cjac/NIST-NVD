@@ -1,5 +1,9 @@
 Revision history for NIST-NVD
 
+0.06		2012-02-09T20:08 -0800
+  Minor changes, but this release will work with
+  NIST::NVD::Store::SQLite3
+
 0.05    2012-01-25 @ 15:47:32
   separated convert-nvd and Query from the concrete storage class so
   that it can be over-ridden

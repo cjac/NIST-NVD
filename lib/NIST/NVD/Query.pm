@@ -11,11 +11,11 @@ NIST::NVD::Query - Query the NVD database
 
 =head1 VERSION
 
-Version 0.051
+Version 0.06
 
 =cut
 
-our $VERSION = '0.051';
+our $VERSION = '0.06';
 
 
 =head1 SYNOPSIS
@@ -78,6 +78,8 @@ sub new {
 
 	my $db_class = "NIST::NVD::Store::$store";
 	eval "use $db_class";
+
+	die "unable to use $db_class: $@" if $@;
 
 	my $db = $db_class->new( %args );
 	return unless $db;

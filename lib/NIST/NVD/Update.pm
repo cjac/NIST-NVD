@@ -9,11 +9,11 @@ NIST::NVD::Update - The great new NIST::NVD::Update!
 
 =head1 VERSION
 
-Version 0.01
+Version 0.06
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.06';
 
 =head1 SYNOPSIS
 
@@ -45,6 +45,8 @@ sub new {
 	my $db_class = "NIST::NVD::Store::$store";
 	eval "use $db_class";
 
+	die "unable to use $db_class: $@" if $@;
+
 	my $db = $db_class->new( $db_class->_get_default_args(), %args );
 	return unless $db;
 
@@ -66,6 +68,22 @@ sub put_idx_cpe {
 
 	return $result;
 }
+
+=head2 put_cpe
+
+ my $result = put_cpe ( $cpe_urn )
+
+=cut
+
+sub put_cpe {
+	my $self = shift;
+	# TODO: Validate
+
+	my $result = $self->{store}->put_cpe(@_);
+
+	return $result;
+}
+
 
 =head2 put_nvd_entries
 

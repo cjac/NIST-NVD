@@ -12,7 +12,7 @@ use Cwd;
 (my $test_dir)       = $Bin;
 (my $dist_dir)       = Cwd::realpath( File::Spec->catfile($Bin, '..') );
 
-if ( not $ENV{RELEASE_TESTING} ) {
+unless ( $ENV{RELEASE_TESTING} ) {
     my $msg = 'Author test.  Set $ENV{RELEASE_TESTING} to a true value to run.';
     plan( skip_all => $msg );
 }
@@ -30,14 +30,14 @@ my @exclude_files = map{
     File::Spec->catfile( $dist_dir, $_ )
 } ( <$exclude_fh> );
 
-ok_manifest({ exclude => [ @exclude_files,
-			   glob( $dist_dir . 't/data/*.db' ),
-			 ],
-	      filter  => [qr/\.svn/,
-			  qr/\.git/,
-			  qr/^.*~$/,
-			 ],
-	      bool    => 'or',
-	    });
+ok_manifest({
+	exclude =>  \@exclude_files ,
+	filter  => [
+		qr/\.svn/,
+		qr/\.git/,
+		qr/^.*~$/,
+		],
+		bool    => 'or',
+			});
 
 done_testing();
