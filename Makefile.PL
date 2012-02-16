@@ -13,6 +13,7 @@ WriteMakefile
    PL_FILES            => {},
    PREREQ_PM => {
 		 'Test::More'            => 0,
+		 'Test::File'            => 0,
 		 'Data::Dumper'          => 0,
 		 'XML::XPath'            => 0,
 		 'XML::XPath::XMLParser' => 0,

@@ -11,11 +11,11 @@ NIST::NVD::Query - Query the NVD database
 
 =head1 VERSION
 
-Version 0.06
+Version 0.07
 
 =cut
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 
 =head1 SYNOPSIS
@@ -227,7 +227,7 @@ L<http://search.cpan.org/dist/NIST-NVD/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 F5 Networks, Inc.
+Copyright 2011, 2012 F5 Networks, Inc.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

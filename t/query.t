@@ -10,6 +10,9 @@ use FindBin qw($Bin);
 ( my $data_dir )     = "$test_dir/data"                  =~ m:^(.*/data)$:;
 ( my $db_file )      = "$data_dir/nvdcve-2.0.db"         =~ /^(.*db)$/;
 ( my $cpe_idx_file ) = "$data_dir/nvdcve-2.0.idx_cpe.db" =~ /^(.*db)$/;
+( my $cwe_idx_file ) = "$data_dir/nvdcve-2.0.idx_cwe.db" =~ /^(.*db)$/;
+( my $cwe_file )     = "$data_dir/cwec_v2.2.db" =~ /^(.*db)$/;
+
 
 BEGIN {
     use_ok('NIST::NVD::Query') || print "Bail out!";

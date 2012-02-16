@@ -9,11 +9,11 @@ NIST::NVD - Placeholder for general NIST::NVD utilities
 
 =head1 VERSION
 
-Version 0.06
+Version 0.07
 
 =cut
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 
 =head1 SYNOPSIS
@@ -29,9 +29,6 @@ C.J. Adams-Collier, C<< <cjac at f5.com> >>
 Please report any bugs or feature requests to C<bug-nist-nvd at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=NIST-NVD>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
-
-
-
 
 =head1 SUPPORT
 
@@ -68,7 +65,14 @@ L<http://search.cpan.org/dist/NIST-NVD/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 F5 Networks, Inc.
+Copyright 2011, 2012 F5 Networks, Inc.
+
+CVE® and CWE™ are marks of The MITRE Corporation and used here with
+permission.  The information in CVE and CWE are copyright of The MITRE
+Corporation and also used here with permission.
+
+Please include links for CVE® <http://cve.mitre.org/> and CWE™
+<http://cwe.mitre.org/> in all reproductions of these materials.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

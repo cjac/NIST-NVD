@@ -6,7 +6,7 @@ use base qw{NIST::NVD::Store::Base};
 use warnings;
 use strict;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Carp;
 
@@ -20,8 +20,10 @@ use DB_File;
 
     my $NVD_Storage_ORACLE = NIST::NVD::Store::DB_File->new(
         store     => 'DB_File',
-        database  => '/path/to/database.db',
+        database  => '/path/to/nvd.db',
+        cwe       => '/path/to/cwe.db',
         'idx_cpe' => '/path/to/idx_cpe.db'
+        'idx_cwe' => '/path/to/idx_cwe.db'
         mode      => $mode, # perldoc DB_File
     );
 
@@ -32,13 +34,21 @@ sub new {
     $class = ref $class || $class;
 
     my $args = {
-        filename => [qw{ database idx_cpe }],
-        database => [qw{ database idx_cpe }],
+        filename => [qw{ database idx_cpe idx_cwe cwe }],
+        database => [qw{ database idx_cpe idx_cwe cwe }],
         required => [qw{ database }],
     };
 
 		unless( exists $args{idx_cpe} ){
 			($args{idx_cpe} = $args{database}) =~ s/(\.db)$/.idx_cpe$1/;
+		}
+
+		unless( exists $args{idx_cwe} ){
+			($args{idx_cwe} = $args{database}) =~ s/(\.db)$/.idx_cwe$1/;
+		}
+
+		unless( exists $args{cwe} ){
+			($args{cwe} = $args{database}) =~ s:/(nvd\.db)$:cwec_v2.2.db:;
 		}
 
     $args{mode} //= O_RDONLY;
