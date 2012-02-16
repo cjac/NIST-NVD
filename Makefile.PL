@@ -22,6 +22,6 @@ WriteMakefile
 		 'DB_File'               => 0,
 		 'Carp'                  => 0,
 		},
-   dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+   dist                => { COMPRESS => 'bzip2 -9f', SUFFIX => 'bz2', },
    clean               => { FILES => 'NIST-NVD-* t/data/*.db' },
   );
