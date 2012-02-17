@@ -69,6 +69,20 @@ sub put_idx_cpe {
 	return $result;
 }
 
+=head2 put_idx_cwe
+
+ my $result = put_idx_cwe ( $cpe_urn, $cwe_id )
+
+=cut
+
+sub put_idx_cwe {
+	my $self = shift;
+
+	my $result = $self->{store}->put_idx_cwe(@_);
+
+	return $result
+}
+
 =head2 put_cpe
 
  my $result = put_cpe ( $cpe_urn )
