@@ -67,11 +67,11 @@ L<http://search.cpan.org/dist/NIST-NVD/>
 
 Copyright 2011, 2012 F5 Networks, Inc.
 
-CVE® and CWE™ are marks of The MITRE Corporation and used here with
+CVE(r) and CWE(tm) are marks of The MITRE Corporation and used here with
 permission.  The information in CVE and CWE are copyright of The MITRE
 Corporation and also used here with permission.
 
-Please include links for CVE® <http://cve.mitre.org/> and CWE™
+Please include links for CVE(r) <http://cve.mitre.org/> and CWE(tm)
 <http://cwe.mitre.org/> in all reproductions of these materials.
 
 This program is free software; you can redistribute it and/or modify it

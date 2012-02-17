@@ -124,6 +124,35 @@ sub cve_for_cpe {
   return $return;
 }
 
+=head2 cwe_for_cpe
+
+Returns a list of CWE IDs for a given CPE URN.
+
+=head3 Required argument
+
+    cpe: CPE URN  Example:
+
+    'cpe:/a:zaal:tgt:1.0.6'
+
+=head3 Return Value
+
+Returns a reference to an array of CWE IDs.  Example:
+
+    $cwe_id_list = [
+      'CWE-1999-1587',
+      'CWE-1999-1588',
+    ]
+
+=head3 Example
+
+    my $cwe_id_list = $q->cwe_for_cpe( cpe => 'cpe:/a:zaal:tgt:1.0.6' );
+
+=cut
+
+sub cwe_for_cpe {
+
+}
+
 =head2 cve
 
 Returns a list of CVE IDs for a given CPE URN.
