@@ -2,5 +2,5 @@
 .git
 .*~
 MYMETA.json
-*.gz
-*.bz2
+.*.gz
+.*.bz2

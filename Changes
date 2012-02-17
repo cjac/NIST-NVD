@@ -1,5 +1,8 @@
 Revision history for NIST-NVD
 
+0.071		2012-02-16T19:21 -0800
+  fixed test as per nightly cpantesters.org run indicated
+
 0.07		2012-02-15T21:31 -0800
   added dependency on Test::File
   stubs in place for CWE
