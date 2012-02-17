@@ -9,11 +9,11 @@ NIST::NVD - Placeholder for general NIST::NVD utilities
 
 =head1 VERSION
 
-Version 0.07
+Version 0.071
 
 =cut
 
-our $VERSION = '0.07';
+our $VERSION = '0.071';
 
 
 =head1 SYNOPSIS
