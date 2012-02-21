@@ -1,5 +1,8 @@
 Revision history for NIST-NVD
 
+0.08		2012-02-20T21:50 -0800
+  made changes required by NIST::NVD::Store::SQLite3
+
 0.071		2012-02-16T19:21 -0800
   fixed test as per nightly cpantesters.org run indicated
 
