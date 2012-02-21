@@ -150,7 +150,15 @@ Returns a reference to an array of CWE IDs.  Example:
 =cut
 
 sub cwe_for_cpe {
+  my( $self, %args ) = @_;
 
+  unless( exists $args{cpe} ){
+    carp qq{"cpe" is a required argument to __PACKAGE__::cwe_for_cpe\n};
+  }
+
+	my $return = $self->{store}->get_cwe_for_cpe(%args);
+
+  return $return;
 }
 
 =head2 cve
@@ -197,6 +205,13 @@ sub cve {
 
 	return $self->{store}->get_cve((%args));
 }
+
+sub cwe {
+  my( $self, %args ) =  @_;
+
+	return $self->{store}->get_cwe((%args));
+}
+
 
 =head1 AUTHOR
 

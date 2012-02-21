@@ -54,31 +54,31 @@ sub new {
 }
 
 
-=head2 put_idx_cpe
+=head2 put_cve_idx_cpe
 
- my $result = put_idx_cpe ( $cpe_urn, $cve_list )
+ my $result = put_cve_idx_cpe ( $cpe_urn, $cve_list )
 
 =cut
 
-sub put_idx_cpe {
+sub put_cve_idx_cpe {
 	my $self = shift;
 	# TODO: Validate
 
-	my $result = $self->{store}->put_idx_cpe(@_);
+	my $result = $self->{store}->put_cve_idx_cpe(@_);
 
 	return $result;
 }
 
-=head2 put_idx_cwe
+=head2 put_cwe_idx_cpe
 
- my $result = put_idx_cwe ( $cpe_urn, $cwe_id )
+ my $result = put_cwe_idx_cpe ( $cpe_urn, $cwe_id )
 
 =cut
 
-sub put_idx_cwe {
+sub put_cwe_idx_cpe {
 	my $self = shift;
 
-	my $result = $self->{store}->put_idx_cwe(@_);
+	my $result = $self->{store}->put_cwe_idx_cpe(@_);
 
 	return $result
 }
@@ -120,12 +120,26 @@ sub put_nvd_entries {
 }
 
 
-=head2 function2
+=head2 put_cwe_data
+
+ my $N = lots();
+
+ my $result = put_cwe_data ( { CWE_ID0 => $data_about_CWE_ID[0],
+                               CWE_ID1 => $data_about_CWE_ID[1],
+#                              ...
+                               "CWE_ID$N" => $data_about_CWE_ID[$N],
+ } )
 
 =cut
 
-sub function2 {
+sub put_cwe_data {
+	my $self = shift;
+
+	my $result = $self->{store}->put_cwe_data(@_);
+
+	return $result;
 }
+
 
 =head1 AUTHOR
 
