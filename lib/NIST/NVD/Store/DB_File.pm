@@ -149,13 +149,13 @@ sub get_cve {
     return $entry;
 }
 
-=head2 put_idx_cpe
+=head2 put_cve_idx_cpe
 
-  $NVD_Storage_ORACLE->put_idx_cpe( $cpe_urn, $value )
+  $NVD_Storage_ORACLE->put_cve_idx_cpe( $cpe_urn, $value )
 
 =cut
 
-sub put_idx_cpe {
+sub put_cve_idx_cpe {
     my ( $self, $vuln_software ) = @_;
 
     foreach my $cpe_urn ( keys %$vuln_software ) {
