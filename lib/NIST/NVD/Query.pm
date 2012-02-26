@@ -161,9 +161,6 @@ sub cwe_for_cpe {
   return $return;
 }
 
-=head2 cve
-
-Returns a list of CVE IDs for a given CPE URN.
 
 =head3 Required argument
 
@@ -200,11 +197,24 @@ Returns a reference to a hash representing a CVE entry:
 =cut
 
 
+=head2 cve
+
+Returns a CVE for a given CPE URN.
+
+=cut
+
 sub cve {
   my( $self, %args ) =  @_;
 
 	return $self->{store}->get_cve((%args));
 }
+
+
+=head2 cwe
+
+Returns a CWE for a given CPE URN.
+
+=cut
 
 sub cwe {
   my( $self, %args ) =  @_;
