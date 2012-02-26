@@ -1,5 +1,9 @@
 Revision history for NIST-NVD
 
+0.09		2012-02-25T18:43 -0800
+  Added some deps.  Tested with some in-house F5 Code.  Looks pretty
+  stable
+
 0.08		2012-02-20T21:50 -0800
   made changes required by NIST::NVD::Store::SQLite3
 
