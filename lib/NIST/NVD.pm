@@ -2,23 +2,63 @@ package NIST::NVD;
 
 use warnings;
 use strict;
+use LWP::UserAgent;
 
 =head1 NAME
 
-NIST::NVD - Placeholder for general NIST::NVD utilities
+NIST::NVD - Fetch and convert NIST's NVD feeds
 
 =head1 VERSION
 
-Version 0.09
+Version 0.10
 
 =cut
 
-our $VERSION = '0.09';
-
+our $VERSION = '0.10';
 
 =head1 SYNOPSIS
 
-Nothing to see here yet
+  my $nvd = NIST::NVD->new( store => 'DB_File',
+                            db_path => $db_path,
+                           );
+  $nvd->update();
+
+=head1 SUBROUTINES/METHODS
+
+=head2 new
+
+  my $nvd = NIST::NVD->new( store => 'DB_File',
+                            db_path => $db_path,
+                           );
+
+=cut
+
+sub new {
+
+    my ( $class, %args ) = @_;
+
+    $class = ref $class || $class;
+
+    bless {}, $class;
+
+}
+
+=head2 update
+
+  my $result = $nvd->update();
+
+  Not yet implemented.  Stubbed out while other features are completed.
+
+=cut
+
+sub update {
+    my ( $self, %args ) = @_;
+
+    my $quick_url    = 'http://nvd.nist.gov/download/nvd-rss.xml';
+    my $complete_url = 'http://nvd.nist.gov/download/nvd-rss-analyzed.xml';
+
+    return 1;
+}
 
 =head1 AUTHOR
 
@@ -83,4 +123,4 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
-1; # End of NIST::NVD
+1;    # End of NIST::NVD

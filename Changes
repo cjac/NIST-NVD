@@ -1,5 +1,10 @@
 Revision history for NIST-NVD
 
+0.10		2012-03-30T10:36 -0800
+  fixed some pod
+  added explicit version numbers in Makefile.PL
+  stubbed out some code to fetch the recent vulnerabilities.  Incomplete.
+
 0.09		2012-02-25T18:43 -0800
   Added some deps.  Tested with some in-house F5 Code.  Looks pretty
   stable
