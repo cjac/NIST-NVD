@@ -69,6 +69,21 @@ sub put_cve_idx_cpe {
 	return $result;
 }
 
+=head2 update_websec_idx_cpe
+
+ my $result = update_websec_idx_cpe ();
+
+=cut
+
+sub update_websec_idx_cpe {
+	my $self = shift;
+	# TODO: Validate
+
+	my $result = $self->{store}->update_websec_idx_cpe(@_);
+
+	return $result;
+}
+
 =head2 put_cwe_idx_cpe
 
  my $result = put_cwe_idx_cpe ( $cpe_urn, $cwe_id )
@@ -115,6 +130,53 @@ sub put_nvd_entries {
 	my $self = shift;
 
 	my $result = $self->{store}->put_nvd_entries(@_);
+
+	return $result;
+}
+
+=head2 put_cwe
+
+  $result = $self->put_cwe( cwe_id   => 'CWE-42',
+                            cwe_dump => $cwe_dump );
+
+=cut
+
+sub put_cwe {
+	my $self = shift;
+
+	my $result = $self->{store}->put_cwe(@_);
+
+	return $result;
+}
+
+=head2 commit
+
+  $result = $self->commit($commit_buffer_name);
+
+=cut
+
+sub commit {
+	my $self = shift;
+
+	my $result = $self->{store}->commit(@_);
+
+	return $result;
+}
+
+
+=head2 get_cwe_ids
+
+  $result = $self->get_cwe_ids();
+  while( my( $cwe_id, $cwe_pkey_id ) = each %$result ){
+    ...
+  }
+
+=cut
+
+sub get_cwe_ids {
+	my($self) = @_;
+
+	my $result = $self->{store}->get_cwe_ids(@_);
 
 	return $result;
 }
