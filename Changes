@@ -29,14 +29,14 @@ Revision history for NIST-NVD
   that it can be over-ridden
 
 0.03    2011/12/19 @ 06:59:30
-	Applying recommendations from Hafey
-	Added some more PODs
-	got tests from t/manifest.t passing
-	MANIFEST and ignore.txt are correct
+  Applying recommendations from Hafey
+  Added some more PODs
+  got tests from t/manifest.t passing
+  MANIFEST and ignore.txt are correct
 
 0.02	2011/12/15
-	Added some PODs
-	got rid of some unnecessary complexity in cve hash ref
+  Added some PODs
+  got rid of some unnecessary complexity in cve hash ref
 
 0.01    2011/12/13
-        Initial work completed
+  Initial work completed
