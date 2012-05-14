@@ -11,21 +11,20 @@ NIST::NVD::Query - Query the NVD database
 
 =head1 VERSION
 
-Version 0.10
+Version 0.11
 
 =cut
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 
 =head1 SYNOPSIS
 
-This module allows you to look up vulnerability data from the NVD
-database
+Query vulnerability data in the NVD database
 
     use NIST::NVD::Query;
 
-    # use convert_nvdcve to generate these files from the XML dumps at
+    # use convert_nvdcve to generate db files from the XML dumps at
     # http://nvd.nist.gov/download.cfm
 
     my( $path_to_db, $path_to_idx_cpe ) = @ARGV;
@@ -50,8 +49,6 @@ database
 
       print $entry->{'vuln:summary'};
     }
-
-=head1 EXPORT
 
 =head1 SUBROUTINES/METHODS
 
@@ -162,6 +159,14 @@ sub cwe_for_cpe {
 }
 
 
+=head2 cve
+
+Returns a CVE for a given CPE URN.
+
+=head3 Example
+
+    my $nvd_cve_entry = $q->cve( cve_id => 'CVE-1999-1587' );
+
 =head3 Required argument
 
     cve_id: CPE URN  Example:
@@ -172,8 +177,7 @@ sub cwe_for_cpe {
 
 Returns a reference to a hash representing a CVE entry:
 
-  my $nvd_cve_entry =
-    {
+ my $nvd_cve_entry = {
      'vuln:vulnerable-configuration' => [ ... ],
      'vuln:vulnerable-software-list' => [ ... ],
      'vuln:cve-id'                   => 'CVE-1999-1587',
@@ -182,24 +186,27 @@ Returns a reference to a hash representing a CVE entry:
      'vuln:last-modified-datetime'   => '...',
      'vuln:cvss'                     => {...},
      'vuln:cwe'                      => 'CWE-ID',
-     'vuln:references'               => [ { attr => {...},
-					    'vuln:references' => [ {...}, ... ],
-					    'vuln:source'     => '...',
-					  } ],
-     'vuln:summary'                  => '...',
-     'vuln:security-protection'      => '...',
-     'vuln:assessment_check'         => { 'check0 name' => 'check0 value',
-					  ... },
-     'vuln:scanner',                 => [ { 'vuln:definition' => { 'vuln attr0 name' => 'vuln attr0 value'
-								   ... } } ],
-    };
-
-=cut
-
-
-=head2 cve
-
-Returns a CVE for a given CPE URN.
+     'vuln:references'               => [
+         {
+             attr => {...},
+             'vuln:references' => [ {...}, ... ],
+             'vuln:source'     => ...,
+         },
+         ...
+     ],
+     'vuln:summary'                  => ...,
+     'vuln:security-protection'      => ...,
+     'vuln:assessment_check'         => {
+         'check0 name' => 'check0 value',
+         ...,
+     },
+     'vuln:scanner',                 => [ {
+				 'vuln:definition' => {
+             'vuln attr0 name' => 'vuln attr0 value',
+             ...,
+         }
+     }, ..., ],
+ };
 
 =cut
 
@@ -227,68 +234,22 @@ sub cwe {
 
 C.J. Adams-Collier, C<< <cjac at f5.com> >>
 
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-nist-nvd at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=NIST-NVD>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc NIST::NVD::Query
-
-
-You can also look for information at:
-
-=over 4
-
-=item * Common Vulnerabilities and Exposures
-
-L<http://cve.mitre.org/>
-
-=item * Common Platform Enumeration
-
-L<http://cpe.mitre.org/>
-
-=item * NIST National Vulnerability Database
-
-L<http://nvd.nist.gov/download.cfm>
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=NIST-NVD>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/NIST-NVD>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/NIST-NVD>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/NIST-NVD/>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
-
-
 =head1 LICENSE AND COPYRIGHT
 
 Copyright 2011, 2012 F5 Networks, Inc.
+
+CVE(r) and CWE(tm) are marks of The MITRE Corporation and used here with
+permission.  The information in CVE and CWE are copyright of The MITRE
+Corporation and also used here with permission.
+
+Please include links for CVE(r) <http://cve.mitre.org/> and CWE(tm)
+<http://cwe.mitre.org/> in all reproductions of these materials.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
 by the Free Software Foundation; or the Artistic License.
 
 See http://dev.perl.org/licenses/ for more information.
-
 
 =cut
 

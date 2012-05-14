@@ -9,17 +9,17 @@ NIST::NVD::Update - Update local cache of vulnerabilities from XML file
 
 =head1 VERSION
 
-Version 0.10
+Version 0.11
 
 =cut
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 =head1 SYNOPSIS
 
-    use NIST::NVD::Query;
+    use NIST::NVD::Update;
 
-    # use convert_nvdcve to generate these files from the XML dumps at
+    # use convert_nvdcve to generate these files from the XML dumps:
     # http://nvd.nist.gov/download.cfm
 
     my $u = NIST::NVD::Update->new(
@@ -32,7 +32,8 @@ our $VERSION = '0.10';
 =head2 new
 
   # See NIST::NVD::Storage::DB_File for an example
-  my $NVD_Updater = NIST::NVD::Update->new( store => $store_type, %args );
+  my $NVD_Updater =
+    NIST::NVD::Update->new( store => $store_type, %args );
 
 =cut
 
@@ -97,6 +98,26 @@ sub put_cwe_idx_cpe {
 
 	return $result
 }
+
+=head2 put_cwe_idx_cve
+
+ my $result = put_cwe_idx_cve ( { NVD_ID0 => $data_about_NVD_ID[0],
+																	NVD_ID1 => $data_about_NVD_ID[1],
+#																	...
+																	"NVD_ID$N" => $data_about_NVD_ID[$N],
+ } )
+
+
+=cut
+
+sub put_cwe_idx_cve {
+	my $self = shift;
+
+	my $result = $self->{store}->put_cwe_idx_cve(@_);
+
+	return $result
+}
+
 
 =head2 put_cpe
 
@@ -207,53 +228,22 @@ sub put_cwe_data {
 
 C.J. Adams-Collier, C<< <cjac at f5.com> >>
 
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-nist-nvd-update at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=NIST-NVD-Update>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
-
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc NIST::NVD::Update
-
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=NIST-NVD-Update>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/NIST-NVD-Update>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/NIST-NVD-Update>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/NIST-NVD-Update/>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
-
-
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012 C.J. Adams-Collier.
+Copyright 2011, 2012 F5 Networks, Inc.
 
-This program is released under the following license: f5 internal
+CVE(r) and CWE(tm) are marks of The MITRE Corporation and used here with
+permission.  The information in CVE and CWE are copyright of The MITRE
+Corporation and also used here with permission.
+
+Please include links for CVE(r) <http://cve.mitre.org/> and CWE(tm)
+<http://cwe.mitre.org/> in all reproductions of these materials.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
 
 
 =cut
