@@ -202,6 +202,26 @@ sub get_cwe_ids {
 	return $result;
 }
 
+=head2 get_websec_by_cpe
+
+  my $result = $store->get_websec_by_cpe( 'cpe:/a:apache:tomcat:6.0.28' );
+  while( my $websec = shift( @{$result->{websec_results}} ) ){
+    print( "$websec->{key} - $websec->{category}: ".
+           "$websec->{score}\n" );
+  }
+
+=cut
+
+sub get_websec_by_cpe {
+	my($self) = @_;
+
+	my %result = $self->{store}->get_websec_by_cpe(@_);
+
+	return %result if wantarray;
+	return \%result;
+}
+
+
 
 =head2 put_cwe_data
 
