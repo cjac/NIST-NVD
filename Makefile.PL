@@ -20,11 +20,6 @@ WriteMakefile(
         'LWP::UserAgent'        => '6.04',
     },
     PREREQ_PM => {
-        'Data::Dumper'        => '2.130_02',
-        'IO::Compress::Bzip2' => '2.033',
-        'Storable'            => '2.27',
-        'DB_File'             => '1.821',
-        'Carp'                => '1.20',
     },
     dist  => { COMPRESS => 'bzip2 -9f', SUFFIX => 'bz2', },
     clean => { FILES    => 'NIST-NVD-* t/data/*.db' },

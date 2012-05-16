@@ -80,9 +80,9 @@ sub new {
 	my $db_class = "NIST::NVD::Store::$store";
 	eval "use $db_class";
 
-	die "unable to use $db_class: $@" if $@;
+	croak "unable to use $db_class: $@" if $@;
 
-	my $db = $db_class->new( %args );
+	my $db = $db_class->new( $db_class->_get_default_args(), %args );
 	return unless $db;
 
   bless { store => $db }, $class;

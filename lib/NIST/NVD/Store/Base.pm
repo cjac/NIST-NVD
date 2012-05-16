@@ -48,7 +48,7 @@ sub new {
 	(my( $class, %args )) = @_;
 	$class //= ref $class;
 
-	my $self = bless {}, $class;
+	my $self = bless {store => $args{store}}, $class;
 
 	my $store = $args{store};
 
@@ -58,6 +58,22 @@ sub new {
 	$self->{$store} = $self->_connect_db( database => $args{database} );
 
 	return $self;
+}
+
+sub _important_fields {
+	return
+            qw(
+            vuln:cve-id
+            vuln:cvss
+            vuln:cwe
+            vuln:discovered-datetime
+            vuln:published-datetime
+            vuln:discovered-datetime
+            vuln:last-modified-datetime
+            vuln:security-protection
+						vuln:vulnerable-software-list
+            );
+
 }
 
 our $AUTOLOAD;

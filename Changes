@@ -2,6 +2,7 @@ Revision history for NIST-NVD
 
 0.12		2012-05-16T0758 -0800
   integrated work related to get_websec_by_cpe
+  removed DB_File dep
 
 0.11		2012-04-26T15:31 -0800
   applied recommendations from Lowell
