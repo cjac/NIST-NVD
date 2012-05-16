@@ -3,7 +3,9 @@ package NIST::NVD::Store::Base;
 use warnings;
 use strict;
 
-our $VERSION = '0.11';
+use Carp(qw(croak));
+
+our $VERSION = '0.12';
 
 =head2 get_cve_for_cpe
 
@@ -35,5 +37,46 @@ sub _get_default_args {
 
 }
 
+=head2 new
+
+  The constructor for classes which inherit from
+  NIST::NVD::Store::Base, if they don't implement it themselves
+
+=cut
+
+sub new {
+	(my( $class, %args )) = @_;
+	$class //= ref $class;
+
+	my $self = bless {}, $class;
+
+	my $store = $args{store};
+
+	my $db_class = "NIST::NVD::Store::$store";
+	eval "use $db_class";
+
+	die "unable to use $db_class: $@" if $@;
+
+	carp('database argument is required, but was not passed')
+		unless exists $args{database};
+
+	$self->{$store} = $self->_connect_db( database => $args{database} );
+
+	return $self;
+}
+
+our $AUTOLOAD;
+
+sub AUTOLOAD {
+    my $self = shift;
+    my $type = ref($self)
+        or croak "$self is not an object";
+
+    my $name = $AUTOLOAD;
+
+		return if $name eq 'DESTROY';
+
+		croak "$self->{store} does not yet implement $name.  Don't call it.";
+}
 
 1;

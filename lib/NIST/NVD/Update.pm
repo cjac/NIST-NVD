@@ -3,17 +3,21 @@ package NIST::NVD::Update;
 use warnings;
 use strict;
 
+use NIST::NVD::Query;
+use base qw{NIST::NVD::Query};
+
+
 =head1 NAME
 
-NIST::NVD::Update - Update local cache of vulnerabilities from XML file
+NIST::NVD::Update - Query and Update the NVD database
 
 =head1 VERSION
 
-Version 0.11
+Version 0.12
 
 =cut
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 =head1 SYNOPSIS
 
@@ -31,7 +35,9 @@ our $VERSION = '0.11';
 
 =head2 new
 
-  # See NIST::NVD::Storage::DB_File for an example
+  # See NIST::NVD::Storage::DB_File or NIST::NVD::Storage::SQLite3 for
+  # an example store implementation
+
   my $NVD_Updater =
     NIST::NVD::Update->new( store => $store_type, %args );
 
@@ -42,11 +48,6 @@ sub new {
   $class = ref $class || $class;
 
 	my $store = $args{store} || "DB_File";
-
-	my $db_class = "NIST::NVD::Store::$store";
-	eval "use $db_class";
-
-	die "unable to use $db_class: $@" if $@;
 
 	my $db = $db_class->new( $db_class->_get_default_args(), %args );
 	return unless $db;
@@ -183,44 +184,6 @@ sub commit {
 
 	return $result;
 }
-
-
-=head2 get_cwe_ids
-
-  $result = $self->get_cwe_ids();
-  while( my( $cwe_id, $cwe_pkey_id ) = each %$result ){
-    ...
-  }
-
-=cut
-
-sub get_cwe_ids {
-	my($self) = @_;
-
-	my $result = $self->{store}->get_cwe_ids(@_);
-
-	return $result;
-}
-
-=head2 get_websec_by_cpe
-
-  my $result = $store->get_websec_by_cpe( 'cpe:/a:apache:tomcat:6.0.28' );
-  while( my $websec = shift( @{$result->{websec_results}} ) ){
-    print( "$websec->{key} - $websec->{category}: ".
-           "$websec->{score}\n" );
-  }
-
-=cut
-
-sub get_websec_by_cpe {
-	my($self) = @_;
-
-	my %result = $self->{store}->get_websec_by_cpe(@_);
-
-	return %result if wantarray;
-	return \%result;
-}
-
 
 
 =head2 put_cwe_data

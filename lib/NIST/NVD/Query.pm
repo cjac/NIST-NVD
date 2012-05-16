@@ -11,11 +11,11 @@ NIST::NVD::Query - Query the NVD database
 
 =head1 VERSION
 
-Version 0.11
+Version 0.12
 
 =cut
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 
 =head1 SYNOPSIS
@@ -64,6 +64,10 @@ Query vulnerability data in the NVD database
     my $q = NIST::NVD::Query->new( database => $path_to_db,
                                    idx_cpe  => $path_to_idx_cpe,
                                   );
+
+=head3 Return Value
+
+    $q is an object reference of type NIST::NVD::Query
 
 =cut
 
@@ -120,6 +124,43 @@ sub cve_for_cpe {
 
   return $return;
 }
+
+=head2 get_websec_by_cpe
+
+  my $result = $store->get_websec_by_cpe( 'cpe:/a:apache:tomcat:6.0.28' );
+  while( my $websec = shift( @{$result->{websec_results}} ) ){
+    print( "$websec->{key} - $websec->{category}: ".
+           "$websec->{score}\n" );
+  }
+
+=cut
+
+sub get_websec_by_cpe {
+	my($self) = @_;
+
+	my %result = $self->{store}->get_websec_by_cpe(@_);
+
+	return %result if wantarray;
+	return \%result;
+}
+
+=head2 get_cwe_ids
+
+  $result = $self->get_cwe_ids();
+  while( my( $cwe_id, $cwe_pkey_id ) = each %$result ){
+    ...
+  }
+
+=cut
+
+sub get_cwe_ids {
+	my($self) = @_;
+
+	my $result = $self->{store}->get_cwe_ids(@_);
+
+	return $result;
+}
+
 
 =head2 cwe_for_cpe
 
