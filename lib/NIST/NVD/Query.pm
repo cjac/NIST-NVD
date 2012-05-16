@@ -127,6 +127,67 @@ sub cve_for_cpe {
 
 =head2 get_websec_by_cpe
 
+=head3 Required argument
+
+    cpe: CPE URN  Example:
+
+    'cpe:/a:zaal:tgt:1.0.6'
+
+=head3 Return Value
+
+Returns a reference to a websec score object
+    $result =
+         {  websec_results => [
+                {   category => 'Other',
+                    score    => int(rand 10),
+                    key      => 'A0',
+                },
+                {   category => 'Injection',
+                    score    => 9.34,
+                    key      => 'A1',
+                },
+                {   category => 'Cross-Site Scripting (XSS)',
+                    score    => 8.11,
+                    key      => 'A2',
+                },
+                {   category =>
+                        'Broken Authentication and Session Management',
+                    score    => 7,
+                    key      => 'A3',
+                },
+                {   category => 'Insecure Direct Object References',
+                    score    => 6,
+                    key      => 'A4',
+                },
+                {   category => 'Cross-Site Request Forgery (CSRF)',
+                    score    => 5,
+                    key      => 'A5',
+                },
+                {   category => 'Security Misconfiguration',
+                    score    => 4,
+                    key      => 'A6',
+                },
+                {   category => 'Insecure Cryptographic Storage',
+                    score    => 3,
+                    key      => 'A7',
+                },
+                {   category => 'Failure to Restrict URL Access',
+                    score    => 2,
+                    key      => 'A8',
+                },
+                {   category => 'Insufficient Transport Layer Protection',
+                    score    => 1,
+                    key      => 'A9',
+                },
+                {   category => 'Unvalidated Redirects and Forwards',
+                    score    => 0,
+                    key      => 'A10',
+                },
+            ]
+        }
+
+=head3 Example
+
   my $result = $store->get_websec_by_cpe( 'cpe:/a:apache:tomcat:6.0.28' );
   while( my $websec = shift( @{$result->{websec_results}} ) ){
     print( "$websec->{key} - $websec->{category}: ".

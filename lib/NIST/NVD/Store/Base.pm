@@ -52,11 +52,6 @@ sub new {
 
 	my $store = $args{store};
 
-	my $db_class = "NIST::NVD::Store::$store";
-	eval "use $db_class";
-
-	die "unable to use $db_class: $@" if $@;
-
 	carp('database argument is required, but was not passed')
 		unless exists $args{database};
 
@@ -78,5 +73,7 @@ sub AUTOLOAD {
 
 		croak "$self->{store} does not yet implement $name.  Don't call it.";
 }
+
+sub DESTROY {}
 
 1;

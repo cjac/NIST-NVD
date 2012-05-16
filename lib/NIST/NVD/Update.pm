@@ -3,6 +3,8 @@ package NIST::NVD::Update;
 use warnings;
 use strict;
 
+use Carp;
+
 use NIST::NVD::Query;
 use base qw{NIST::NVD::Query};
 
@@ -48,6 +50,11 @@ sub new {
   $class = ref $class || $class;
 
 	my $store = $args{store} || "DB_File";
+
+	my $db_class = "NIST::NVD::Store::$store";
+	eval "use $db_class";
+
+	croak "unable to use $db_class: $@" if $@;
 
 	my $db = $db_class->new( $db_class->_get_default_args(), %args );
 	return unless $db;
