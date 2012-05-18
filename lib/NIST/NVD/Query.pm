@@ -1,5 +1,4 @@
 package NIST::NVD::Query;
-use NIST::NVD::Store::DB_File;
 
 use warnings;
 use strict;
@@ -11,11 +10,11 @@ NIST::NVD::Query - Query the NVD database
 
 =head1 VERSION
 
-Version 0.12
+Version 0.13
 
 =cut
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 
 =head1 SYNOPSIS

@@ -1,5 +1,8 @@
 Revision history for NIST-NVD
 
+0.13		20120517T21:25:14 -0800
+	removed hard dep on DB_File from NIST::NVD::Query
+
 0.12		2012-05-16T0758 -0800
   integrated work related to get_websec_by_cpe
   removed DB_File dep
