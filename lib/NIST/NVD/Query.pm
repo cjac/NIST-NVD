@@ -10,12 +10,11 @@ NIST::NVD::Query - Query the NVD database
 
 =head1 VERSION
 
-Version 0.13
+Version 0.14
 
 =cut
 
-our $VERSION = '0.13';
-
+our $VERSION = '0.14';
 
 =head1 SYNOPSIS
 
@@ -71,20 +70,24 @@ Query vulnerability data in the NVD database
 =cut
 
 sub new {
-  my( $class, %args ) = @_;
-  $class = ref $class || $class;
+    my ( $class, %args ) = @_;
+    $class = ref $class || $class;
 
-	my $store = $args{store} || "DB_File";
+    my $store = $args{store} || "DB_File";
 
-	my $db_class = "NIST::NVD::Store::$store";
-	eval "use $db_class";
+    my $db_class = "NIST::NVD::Store::$store";
+    eval "use $db_class";
 
-	croak "unable to use $db_class: $@" if $@;
+    croak "unable to use $db_class: $@" if $@;
 
-	my $db = $db_class->new( $db_class->_get_default_args(), %args );
-	return unless $db;
+    my $db = $db_class->new(
+        $db_class->_get_default_args(),
+        store    => $args{store},
+        database => $args{database},
+    );
+    return unless $db;
 
-  bless { store => $db }, $class;
+    bless { store => $db }, $class;
 }
 
 =head2 cve_for_cpe
@@ -113,15 +116,15 @@ Returns a reference to an array of CVE IDs.  Example:
 =cut
 
 sub cve_for_cpe {
-  my( $self, %args ) = @_;
+    my ( $self, %args ) = @_;
 
-  unless( exists $args{cpe} ){
-    carp qq{"cpe" is a required argument to __PACKAGE__::cve_for_cpe\n};
-  }
+    unless ( exists $args{cpe} ) {
+        confess qq{"cpe" is a required argument to __PACKAGE__::cve_for_cpe\n};
+    }
 
-	my $return = $self->{store}->get_cve_for_cpe(%args);
+    my $return = $self->{store}->get_cve_for_cpe(%args);
 
-  return $return;
+    return $return;
 }
 
 =head2 get_websec_by_cpe
@@ -196,12 +199,12 @@ Returns a reference to a websec score object
 =cut
 
 sub get_websec_by_cpe {
-	my($self) = @_;
+    my ($self) = @_;
 
-	my %result = $self->{store}->get_websec_by_cpe(@_);
+    my %result = $self->{store}->get_websec_by_cpe(@_);
 
-	return %result if wantarray;
-	return \%result;
+    return %result if wantarray;
+    return \%result;
 }
 
 =head2 get_cwe_ids
@@ -214,13 +217,12 @@ sub get_websec_by_cpe {
 =cut
 
 sub get_cwe_ids {
-	my($self) = @_;
+    my ($self) = @_;
 
-	my $result = $self->{store}->get_cwe_ids(@_);
+    my $result = $self->{store}->get_cwe_ids(@_);
 
-	return $result;
+    return $result;
 }
-
 
 =head2 cwe_for_cpe
 
@@ -248,17 +250,16 @@ Returns a reference to an array of CWE IDs.  Example:
 =cut
 
 sub cwe_for_cpe {
-  my( $self, %args ) = @_;
+    my ( $self, %args ) = @_;
 
-  unless( exists $args{cpe} ){
-    carp qq{"cpe" is a required argument to __PACKAGE__::cwe_for_cpe\n};
-  }
+    unless ( exists $args{cpe} ) {
+        carp qq{"cpe" is a required argument to __PACKAGE__::cwe_for_cpe\n};
+    }
 
-	my $return = $self->{store}->get_cwe_for_cpe(%args);
+    my $return = $self->{store}->get_cwe_for_cpe(%args);
 
-  return $return;
+    return $return;
 }
-
 
 =head2 cve
 
@@ -312,11 +313,10 @@ Returns a reference to a hash representing a CVE entry:
 =cut
 
 sub cve {
-  my( $self, %args ) =  @_;
+    my ( $self, %args ) = @_;
 
-	return $self->{store}->get_cve((%args));
+    return $self->{store}->get_cve( (%args) );
 }
-
 
 =head2 cwe
 
@@ -325,11 +325,10 @@ Returns a CWE for a given CPE URN.
 =cut
 
 sub cwe {
-  my( $self, %args ) =  @_;
+    my ( $self, %args ) = @_;
 
-	return $self->{store}->get_cwe((%args));
+    return $self->{store}->get_cwe( (%args) );
 }
-
 
 =head1 AUTHOR
 
@@ -354,4 +353,4 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
-1; # End of NIST::NVD::Query
+1;    # End of NIST::NVD::Query

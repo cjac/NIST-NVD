@@ -1,5 +1,8 @@
 Revision history for NIST-NVD
 
+0.14		20120522T22:31:26 -0700
+  this code has been exercised by F5 and seems to work.
+
 0.13		20120517T21:25:14 -0800
 	removed hard dep on DB_File from NIST::NVD::Query
 

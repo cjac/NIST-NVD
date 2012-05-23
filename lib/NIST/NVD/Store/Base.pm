@@ -5,7 +5,7 @@ use strict;
 
 use Carp(qw(croak));
 
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 =head2 get_cve_for_cpe
 
@@ -85,9 +85,12 @@ sub AUTOLOAD {
 
     my $name = $AUTOLOAD;
 
+		$name =~ s/^.*://;
+
 		return if $name eq 'DESTROY';
 
-		croak "$self->{store} does not yet implement $name.  Don't call it.";
+		croak "$type does not yet implement $name.  Don't call it."
+			unless $type->can($name);
 }
 
 sub DESTROY {}
