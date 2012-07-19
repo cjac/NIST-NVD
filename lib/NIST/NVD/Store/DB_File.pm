@@ -6,7 +6,7 @@ use base qw{NIST::NVD::Store::Base};
 use warnings;
 use strict;
 
-our $VERSION = '1.00.00';
+our $VERSION = '1.01.00';
 
 use Carp;
 
