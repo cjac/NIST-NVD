@@ -15,11 +15,11 @@ NIST::NVD::Update - Query and Update the NVD database
 
 =head1 VERSION
 
-Version 0.14
+Version 1.00.00
 
 =cut
 
-our $VERSION = '0.14';
+our $VERSION = '1.00.00';
 
 =head1 SYNOPSIS
 

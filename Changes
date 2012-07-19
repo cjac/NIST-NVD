@@ -1,5 +1,24 @@
 Revision history for NIST-NVD
 
+ 1.00.00 20120121T1602:23-0700 cjac@f5.com
+        - exercised in house
+				* works for me.  How about you?
+
+        - implemented features
+        * loading of nvd entries sourced from XML published by NIST
+          into DB_File database
+        * querying of nvd entries stored in database
+        * CRUD layer implemented using database agnostic API
+
+        - unimplemented features
+        * real-time CVE synchronization (need record merge tests)
+        * low hanging fruit in area of memory management love
+        * low hanging fruit in area of batch nvd entry processing
+        * CVE loading code from bin/ should be re-factored under
+          lib/NIST/NVD/
+        * NIST::NVD::Store::DB_File does not implemente cve or cwe API
+          completely - see NIST::NVD::Store::SQLite3
+
 0.14		20120522T22:31:26 -0700
   this code has been exercised by F5 and seems to work.
 
