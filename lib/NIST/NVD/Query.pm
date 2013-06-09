@@ -10,11 +10,11 @@ NIST::NVD::Query - Query the NVD database
 
 =head1 VERSION
 
-Version 1.01.00
+Version 1.02.00
 
 =cut
 
-our $VERSION = '1.01.00';
+our $VERSION = '1.02.00';
 
 =head1 SYNOPSIS
 

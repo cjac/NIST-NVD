@@ -16,11 +16,11 @@ WriteMakefile(
         'Test::Pod::Coverage'   => '1.08',
         'Test::Pod'             => '1.44',
         'Perl::Critic'          => '1.117',
+    },
+    PREREQ_PM => {
         'XML::XPath'            => '1.13',
         'LWP::UserAgent'        => '6.04',
     },
-    PREREQ_PM => {
-    },
-    dist  => { COMPRESS => 'bzip2 -9f', SUFFIX => 'bz2', },
+    dist  => { COMPRESS => 'gzip --best', SUFFIX => 'gz', },
     clean => { FILES    => 'NIST-NVD-* t/data/*.db' },
 );
