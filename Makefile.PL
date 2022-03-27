@@ -18,8 +18,8 @@ WriteMakefile(
         'Perl::Critic'          => '1.117',
     },
     PREREQ_PM => {
-        'XML::XPath'            => '1.13',
-        'LWP::UserAgent'        => '6.04',
+        'JSON::XS'              => '4.03',
+        'LWP::UserAgent'        => '6.61',
     },
     dist  => { COMPRESS => 'gzip --best', SUFFIX => 'gz', },
     clean => { FILES    => 'NIST-NVD-* t/data/*.db' },
