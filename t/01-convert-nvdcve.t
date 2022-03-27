@@ -51,7 +51,8 @@ undef $ENV{PATH};
 undef $ENV{ENV};
 undef $ENV{CDPATH};
 
-$ENV{PERL5LIB} = File::Spec->catfile( $dist_dir, 'blib', 'lib' );
+
+$ENV{PERL5LIB} = "$ENV{PERL5LIB}:" . File::Spec->catfile( $dist_dir, 'blib', 'lib' );
 
 chdir($data_dir);
 
