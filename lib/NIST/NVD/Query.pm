@@ -332,11 +332,14 @@ sub cwe {
 
 =head1 AUTHOR
 
-C.J. Adams-Collier, C<< <cjac at f5.com> >>
+C.J. Collier, C<< <cjac at google.com> >>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011, 2012 F5 Networks, Inc.
+Copyright (C) 2012 C.J. Adams-Collier
+Copyright (C) 2011,2012 F5 Networks, Inc
+Copyright (C) 2013 Washington State Guard Association
+Copyright (C) 2022 Google, LLC
 
 CVE(r) and CWE(tm) are marks of The MITRE Corporation and used here with
 permission.  The information in CVE and CWE are copyright of The MITRE

@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME           => 'NIST::NVD',
-    AUTHOR         => q{C.J. Adams-Collier <cjac@f5.com>},
+    AUTHOR         => q{C.J. Collier <cjac@google.com>},
     VERSION_FROM   => 'lib/NIST/NVD.pm',
     EXE_FILES      => ['bin/convert-nvdcve'],
     ABSTRACT_FROM  => 'lib/NIST/NVD.pm',
