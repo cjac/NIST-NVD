@@ -41,27 +41,41 @@ my $iter = 0;
 $|++;
 while ( my $line = <$nvdcve_fd> ) {
 
-    if ( $line =~ /(^.*?)<entry/ ) {
-        my $tail = $1;
-        $content .= $tail;
+    # Get the nvd header first
+    if ( !$header ) {
 
-        if ($header) {
+        if ( $line =~ /(^.*?)<entry/ ) {
+            my $tail = $1;
+            $content .= $tail;
+            $header = $content;
+            $line =~ s/^$tail//;
+            $content = $line;
+        }
+        else {
+            $content .= $line;
+        }
+    }
+    else {
+        # Match each CVE entry
+        if ( $line =~ /(^.*?<\/entry>)/ ) {
+            my $tail = $1;
+
+            $content .= $tail;
+
             $entry_body = $content;
             my $xml_string = $header . $entry_body . $footer;
             print(".");
             process_nvd($xml_string);
             $iter++;
+
+            $line =~ s/^$tail//;
+            $content = $line;
+
         }
         else {
-            $header = $content;
+            $content .= $line;
         }
 
-        $line =~ s/^$tail//;
-        $content = $line;
-
-    }
-    else {
-        $content .= $line;
     }
 }
 

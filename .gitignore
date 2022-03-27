@@ -4,4 +4,5 @@ Makefile
 blib/
 pm_to_blib
 nvdcve-2.0*.db
+NIST-NVD-*.tar.gz
 *~
