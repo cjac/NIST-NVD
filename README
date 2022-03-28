@@ -2,7 +2,7 @@ NIST-NVD
 
 This module is used to:
 
-a) convert the NIST NVD feed XML to an on-disk hash table using DB_File
+a) convert the NIST NVD feed JSON to an on-disk hash table using DB_File
 b) query the hash table in question
 
 INSTALLATION
